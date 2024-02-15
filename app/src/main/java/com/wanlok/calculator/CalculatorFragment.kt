@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import com.wanlok.calculator.customView.CalculatorButton
+import com.wanlok.calculator.databinding.FragmentCalculatorBinding
 
 class CalculatorFragment : NavigationFragment() {
-    private val presenter: A1Presenter? = null
+    private val viewModel: CalculationViewModel by viewModels()
 
     private lateinit var zeroButton: CalculatorButton
     private lateinit var oneButton: CalculatorButton
@@ -20,6 +23,8 @@ class CalculatorFragment : NavigationFragment() {
     private lateinit var eightButton: CalculatorButton
     private lateinit var nineButton: CalculatorButton
 
+    private lateinit var numberButtons: List<CalculatorButton>
+
     private lateinit var decimalButton: CalculatorButton
     private lateinit var addButton: CalculatorButton
     private lateinit var minusButton: CalculatorButton
@@ -31,8 +36,23 @@ class CalculatorFragment : NavigationFragment() {
         return "Calculator"
     }
 
+    private fun onNumberButtonClicked(view: View) {
+        var value: Int? = null
+        for (i in numberButtons.indices) {
+            if (numberButtons[i].isClicked(view)) {
+                value = i
+                break
+            }
+        }
+        value?.let { viewModel.getUpdatedText(it) }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_calculator, null) as ViewGroup
+        val binding = DataBindingUtil.inflate<FragmentCalculatorBinding>(inflater, R.layout.fragment_calculator, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        val view = binding.root
 
         zeroButton = view.findViewById(R.id.zeroButton)
         oneButton = view.findViewById(R.id.oneButton)
@@ -45,6 +65,8 @@ class CalculatorFragment : NavigationFragment() {
         eightButton = view.findViewById(R.id.eightButton)
         nineButton = view.findViewById(R.id.nineButton)
 
+        numberButtons = listOf(zeroButton, oneButton, twoButton, threeButton, fourButton, fiveButton, sixButton, sevenButton, eightButton, nineButton)
+
         decimalButton = view.findViewById(R.id.decimalButton)
         addButton = view.findViewById(R.id.addButton)
         minusButton = view.findViewById(R.id.minusButton)
@@ -52,29 +74,10 @@ class CalculatorFragment : NavigationFragment() {
         divideButton = view.findViewById(R.id.divideButton)
         backspaceButton = view.findViewById(R.id.backspaceButton)
 
-//        fragmentCalculatorBinding.setViewModel(new LoginViewModel());
-//        fragmentCalculatorBinding.executePendingBindings();
+        for (numberButton in numberButtons) {
+            numberButton.setOnClickListener { onNumberButtonClicked(it) }
+        }
 
-//        presenter = new A1Presenter(getArguments());
-//
-//        textView = root.findViewById(R.id.textView);
-//        button = root.findViewById(R.id.button);
-//
-//        textView.setText(presenter.getName());
-//
-//        button.setText("Next");
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Bundle bundle = new Bundle();
-//                bundle.putString("dummy", "ABCD");
-//
-//                A2Fragment fragment = new A2Fragment();
-//                fragment.setArguments(bundle);
-//
-//                open(fragment, button);
-//            }
-//        });
         return view
     }
 }
