@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wanlok.calculator.customView.CalculatorButton
@@ -37,52 +36,53 @@ class CalculatorFragment : NavigationFragment() {
     private lateinit var divideButton: CalculatorButton
     private lateinit var equalButton: CalculatorButton
     private lateinit var backspaceButton: CalculatorButton
+    private lateinit var clearButton: CalculatorButton
 
     override fun getTitle(): String {
         return "Calculator"
     }
 
     private fun onNumberButtonClick(view: View) {
-        var value: Int? = null
+        var value = ""
         for (i in numberButtons.indices) {
             if (numberButtons[i].isClicked(view)) {
-                value = i
+                value += i
                 break
             }
         }
-        value?.let { viewModel.getUpdatedText(it) }
-    }
-
-    private fun dummy() {
-        viewModel.add()
+        value?.let { viewModel.text(it) }
     }
 
     private fun onDecimalButtonClick(view: View) {
-        dummy()
+        viewModel.decimal()
     }
 
     private fun onAddButtonClick(view: View) {
-        dummy()
+        viewModel.operator("+")
     }
 
     private fun onMinusButtonClick(view: View) {
-        dummy()
+        viewModel.operator("-")
     }
 
     private fun onMultiplyButtonClick(view: View) {
-        dummy()
+        viewModel.operator("*")
     }
 
     private fun onDivideButtonClick(view: View) {
-        dummy()
+        viewModel.operator("/")
     }
 
     private fun onEqualButtonClick(view: View) {
-        dummy()
+        viewModel.equal()
     }
 
     private fun onBackspaceButtonClick(view: View) {
         viewModel.backspace()
+    }
+
+    private fun onClearButtonClick(view: View) {
+        viewModel.clear()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -96,9 +96,10 @@ class CalculatorFragment : NavigationFragment() {
         calculationRecyclerView.layoutManager = LinearLayoutManager(activity)
         calculationRecyclerView.adapter = ExampleAdapter(emptyList())
 
-        viewModel.values.observe(viewLifecycleOwner) { newList ->
-            val adapter: ExampleAdapter = calculationRecyclerView.adapter as ExampleAdapter
-            adapter.updateList(newList)
+        viewModel.lines.observe(viewLifecycleOwner) { lines ->
+            val adapter = calculationRecyclerView.adapter as ExampleAdapter
+            adapter.updateList(lines)
+            calculationRecyclerView.scrollToPosition(adapter.itemCount - 1);
         }
 
         zeroButton = view.findViewById(R.id.zeroButton)
@@ -138,6 +139,9 @@ class CalculatorFragment : NavigationFragment() {
 
         backspaceButton = view.findViewById(R.id.backspaceButton)
         backspaceButton.setOnClickListener { onBackspaceButtonClick(it) }
+
+        clearButton = view.findViewById(R.id.clearButton)
+        clearButton.setOnClickListener { onClearButtonClick(it) }
 
         return view
     }

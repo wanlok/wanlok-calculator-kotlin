@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.wanlok.calculator.databinding.ItemExampleBinding
+import com.wanlok.calculator.model.CalculationLine
 
-class ExampleAdapter(private var items: List<ExampleItem>) : RecyclerView.Adapter<ExampleViewHolder>() {
+class ExampleAdapter(private var calculationLines: List<CalculationLine>): RecyclerView.Adapter<ExampleAdapter.ExampleViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExampleViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding: ItemExampleBinding = DataBindingUtil.inflate(inflater, R.layout.item_example, parent, false)
@@ -14,15 +15,22 @@ class ExampleAdapter(private var items: List<ExampleItem>) : RecyclerView.Adapte
     }
 
     override fun onBindViewHolder(holder: ExampleViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(calculationLines[position])
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return calculationLines.size
     }
 
-    fun updateList(items: List<ExampleItem>) {
-        this.items = items
+    fun updateList(calculationLines: List<CalculationLine>) {
+        this.calculationLines = calculationLines
         notifyDataSetChanged()
+    }
+
+    class ExampleViewHolder(private val binding: ItemExampleBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bind(calculationLine: CalculationLine) {
+            binding.calculationLine = calculationLine
+            binding.executePendingBindings()
+        }
     }
 }

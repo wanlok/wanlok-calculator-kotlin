@@ -1,47 +1,110 @@
 package com.wanlok.calculator
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.wanlok.calculator.model.Calculation
+import com.wanlok.calculator.model.CalculationLine
+import java.math.BigDecimal
 import java.util.Date
 
 class CalculationViewModel: ViewModel() {
+    private val calculationLines: ArrayList<CalculationLine> = ArrayList()
 
-    private val calculation = Calculation(0, Date(), "")
-
-    val current = MutableLiveData<String>()
-    val values = MutableLiveData<ArrayList<ExampleItem>>()
+    val lines = MutableLiveData<ArrayList<CalculationLine>>()
 
     init {
-        current.value = ""
-        values.value = ArrayList()
+        calculationLines.add(CalculationLine(0, 0, null, "", "0", true))
     }
 
-    fun getUpdatedText(value: Int) {
-//        calculation.value = calculation.value + value
-//        Log.d("ROBERT", "CHECK TEXT: " + calculation.value)
+    private fun compute(previous: CalculationLine, current: CalculationLine): String {
+        val x = BigDecimal(previous.subtotal)
+        val y = BigDecimal(current.operand)
+        val operator = current.operator
+        var operand = ""
+        if (operator == "+") {
+            operand = x.plus(y).toPlainString()
+        } else if (operator == "-") {
+            operand = x.minus(y).toPlainString()
+        } else if (operator == "*") {
+            operand = x.times(y).toPlainString()
+        } else if (operator == "/") {
+            operand = x.divide(y).toPlainString()
+        }
+        return operand
+    }
 
-        current.value = current.value + value
-        current.postValue(current.value)
+    fun text(operand: String) {
+        val current = calculationLines[calculationLines.size - 1]
+        if (current.operator.equals("=")) {
+            return
+        }
+        current.operand += operand
+        lines.postValue(calculationLines)
+    }
+
+    fun decimal() {
+        val current = calculationLines[calculationLines.size - 1]
+        if (current.operator.equals("=")) {
+            return
+        }
+        if (!current.operand.contains(".")) {
+            current.operand += "."
+        }
+        lines.postValue(calculationLines)
     }
 
     fun backspace() {
-        current.value?.let { value ->
-            if (value.isNotEmpty()) {
-                current.postValue(value.substring(0, value.length - 1))
-            }
+        val current = calculationLines[calculationLines.size - 1]
+        if (current.operator.equals("=")) {
+            return
         }
+        val operand = current.operand
+        if (operand.isNotEmpty()) {
+            current.operand = operand.substring(0, operand.length - 1)
+        }
+        lines.postValue(calculationLines)
     }
 
-    fun add() {
-        values.value?.let { values ->
-            current.value?.let { value ->
-                if (value.isNotEmpty()) {
-                    values.add(ExampleItem(value))
-                    current.postValue("")
-                }
-            }
-            this.values.postValue(values)
+    fun operator(operator: String?) {
+        if (operator.equals("=")) {
+            equal()
         }
+        val current = calculationLines[calculationLines.size - 1]
+        if (current.operand.isEmpty()) {
+            current.operator = operator
+        } else {
+            if (calculationLines.size > 1) {
+                val previous = calculationLines[calculationLines.size - 2]
+                current.subtotal = compute(previous, current)
+            } else {
+                current.subtotal = current.operand
+            }
+            current.last = false
+            calculationLines.add(CalculationLine(0, 0, operator, "", "0", true))
+        }
+        lines.postValue(calculationLines)
+    }
+
+    fun equal() {
+        val current = calculationLines[calculationLines.size - 1]
+        if (current.operator.equals("=")) {
+            return
+        }
+        if (calculationLines.size > 1) {
+            val previous = calculationLines[calculationLines.size - 2]
+            current.subtotal = compute(previous, current)
+        } else {
+            current.subtotal = current.operand
+        }
+        current.last = false
+        calculationLines.add(CalculationLine(0, 0, "=", current.subtotal, "0", true))
+        lines.postValue(calculationLines)
+    }
+
+    fun clear() {
+        calculationLines.clear()
+        calculationLines.add(CalculationLine(0, 0, null, "", "0", true))
+        lines.postValue(calculationLines)
     }
 }

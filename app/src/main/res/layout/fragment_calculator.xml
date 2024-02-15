@@ -15,15 +15,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_alignParentTop="true"
-            android:layout_above="@id/numberTextView"
-            android:background="@color/blue" />
-
-        <TextView
-            android:id="@+id/numberTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_above="@id/calculatorButtonLinearLayout"
-            android:text="@={viewModel.current}" />
+            android:background="@color/blue" />
 
         <LinearLayout
             android:id="@+id/calculatorButtonLinearLayout"
@@ -37,10 +30,12 @@
                 android:layout_height="64dp"
                 android:orientation="horizontal">
 
-                <View
+                <com.wanlok.calculator.customView.CalculatorButton
+                    android:id="@+id/clearButton"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="25" />
+                    android:layout_weight="25"
+                    app:text="C" />
 
                 <View
                     android:layout_width="1dp"
