@@ -12,7 +12,7 @@ import com.wanlok.calculator.customView.CalculatorButton
 import com.wanlok.calculator.databinding.FragmentCalculatorBinding
 
 class CalculatorFragment : NavigationFragment() {
-    private val viewModel: CalculationViewModel by viewModels()
+    private val viewModel: CalculatorViewModel by viewModels()
 
     private lateinit var calculationRecyclerView: RecyclerView
 

@@ -6,7 +6,7 @@ import com.wanlok.calculator.model.CalculationLine
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-class CalculationViewModel: ViewModel() {
+class CalculatorViewModel: ViewModel() {
     private val calculationLines: ArrayList<CalculationLine> = ArrayList()
 
     val lines = MutableLiveData<ArrayList<CalculationLine>>()
@@ -66,7 +66,7 @@ class CalculationViewModel: ViewModel() {
 
     fun operator(operator: String) {
         val current = calculationLines[calculationLines.size - 1]
-        if (current.operator == null && current.operand.isEmpty()) {
+        if ((current.operator == null && current.operand.isEmpty()) || current.operand == ".") {
             return
         }
         if (current.operand.isEmpty()) {
@@ -86,7 +86,7 @@ class CalculationViewModel: ViewModel() {
 
     fun equal() {
         val current = calculationLines[calculationLines.size - 1]
-        if (calculationLines.size <= 1 || current.operator == "=") {
+        if (calculationLines.size <= 1 || current.operator == "=" || current.operand == ".") {
             return
         }
         val previous = calculationLines[calculationLines.size - 2]
