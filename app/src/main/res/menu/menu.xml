@@ -6,7 +6,7 @@
         android:title="Number Calculator"/>
 
     <item
-        android:id="@+id/b"
+        android:id="@+id/dateCalculator"
         android:icon="@drawable/ic_android_black_24dp"
-        android:title="Settings"/>
+        android:title="Date Calculator"/>
 </menu>

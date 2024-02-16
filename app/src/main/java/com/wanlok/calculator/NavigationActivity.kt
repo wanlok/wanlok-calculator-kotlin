@@ -138,19 +138,19 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
         val bundle = Bundle()
         bundle.putString("name", "Robert Wan")
 
-        val calculatorFragment = CalculatorFragment()
-        calculatorFragment.arguments = bundle
+        val numberCalculatorFragment = NumberCalculatorFragment()
+        numberCalculatorFragment.arguments = bundle
 
-        val calculatorFragments = ArrayList<NavigationFragment>()
-        calculatorFragments.add(calculatorFragment)
+        val numberCalculatorFragments = ArrayList<NavigationFragment>()
+        numberCalculatorFragments.add(numberCalculatorFragment)
 
         val bFragments = ArrayList<NavigationFragment>()
         bFragments.add(B1Fragment())
 
         map = HashMap()
         map?.let { map ->
-            map[R.id.numberCalculator] = calculatorFragments
-            map[R.id.b] = bFragments
+            map[R.id.numberCalculator] = numberCalculatorFragments
+            map[R.id.dateCalculator] = bFragments
         }
 
         itemId = R.id.numberCalculator

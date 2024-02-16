@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wanlok.calculator.customView.CalculatorButton
 import com.wanlok.calculator.databinding.FragmentCalculatorBinding
 
-class CalculatorFragment : NavigationFragment() {
-    private val viewModel: CalculatorViewModel by viewModels()
+class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
+    private val viewModel: NumberCalculatorViewModel by viewModels()
 
     private lateinit var calculationRecyclerView: RecyclerView
 
@@ -37,6 +38,8 @@ class CalculatorFragment : NavigationFragment() {
     private lateinit var equalButton: CalculatorButton
     private lateinit var backspaceButton: CalculatorButton
     private lateinit var clearButton: CalculatorButton
+
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     override fun getTitle(): String {
         return "Number Calculator"
@@ -85,6 +88,10 @@ class CalculatorFragment : NavigationFragment() {
         viewModel.clear()
     }
 
+    override fun onSwipe(direction: Int, position: Int) {
+        viewModel.remove(position)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<FragmentCalculatorBinding>(inflater, R.layout.fragment_calculator, container, false)
         binding.viewModel = viewModel
@@ -97,6 +104,11 @@ class CalculatorFragment : NavigationFragment() {
         calculationRecyclerView.setPadding(0, 0, 0, Utils.dp(16, context))
         calculationRecyclerView.clipToPadding = false;
         calculationRecyclerView.adapter = ExampleAdapter(emptyList())
+
+        context?.let { context ->
+            itemTouchHelper = ItemTouchHelper(SwipeSimpleCallback(context, this))
+            itemTouchHelper.attachToRecyclerView(calculationRecyclerView)
+        }
 
         viewModel.lines.observe(viewLifecycleOwner) { lines ->
             val adapter = calculationRecyclerView.adapter as ExampleAdapter

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="viewModel" type="com.wanlok.calculator.CalculatorViewModel"/>
+        <variable name="viewModel" type="com.wanlok.calculator.NumberCalculatorViewModel"/>
     </data>
 
     <RelativeLayout
@@ -39,7 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:orientation="horizontal"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp">
 
             <View
                 android:layout_width="@dimen/calculator_operator_width"
@@ -54,6 +55,7 @@
                 android:textSize="@dimen/calculator_text_size"
                 android:textColor="@color/black"
                 android:textStyle="bold"
+                android:paddingLeft="16dp"
                 android:paddingRight="16dp" />
 
             <TextView

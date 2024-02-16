@@ -8,6 +8,6 @@
     android:insetBottom="0dp"
     android:textSize="@dimen/calculator_text_size"
     android:textColor="@color/white"
-    android:backgroundTint="@color/green_1"
     android:textAllCaps="false"
+    android:backgroundTint="@color/green_1"
     app:cornerRadius="0dp" />

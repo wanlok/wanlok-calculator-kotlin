@@ -14,7 +14,7 @@ class B1Fragment : NavigationFragment() {
     private var button: Button? = null
 
     override fun getTitle(): String {
-        return "B1"
+        return "Date Calculator"
     }
 
     override fun onCreateView(
