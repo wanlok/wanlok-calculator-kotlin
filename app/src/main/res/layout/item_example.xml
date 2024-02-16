@@ -6,40 +6,50 @@
         <variable name="calculationLine" type="com.wanlok.calculator.model.CalculationLine" />
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/operatorTextView"
             android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:text="@{calculationLine.operator}"
-            android:textSize="24dp"
-            android:background="@color/white"
-            android:gravity="center" />
-
-        <TextView
-            android:id="@+id/operandTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@id/operatorTextView"
-            android:layout_marginLeft="8dp"
-            android:text="@{calculationLine.operand}"
-            android:textSize="24dp"
-            android:background="@color/white"
-            android:gravity="center" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:text="@{calculationLine.subtotal}"
-            android:textSize="24dp"
-            android:background="@color/white"
             android:gravity="center"
-            android:visibility="@{calculationLine.last ? View.GONE : View.VISIBLE}" />
-    </RelativeLayout>
+            android:text="@{calculationLine.operator}"
+            android:textSize="@dimen/calculator_text_size_small"
+            android:textColor="@color/black" />
+
+        <HorizontalScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_gravity="right"
+                android:maxLines="1"
+                android:text="@{calculationLine.operand}"
+                android:textSize="@dimen/calculator_text_size_small"
+                android:textColor="@color/black" />
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_gravity="right"
+                android:maxLines="1"
+                android:text="@{calculationLine.subtotal}"
+                android:textSize="@dimen/calculator_text_size_small"
+                android:textColor="@color/black"
+                android:visibility="@{calculationLine.last ? View.GONE : View.VISIBLE}" />
+        </HorizontalScrollView>
+    </LinearLayout>
 </layout>

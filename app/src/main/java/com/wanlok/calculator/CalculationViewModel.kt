@@ -1,12 +1,10 @@
 package com.wanlok.calculator
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.wanlok.calculator.model.Calculation
 import com.wanlok.calculator.model.CalculationLine
 import java.math.BigDecimal
-import java.util.Date
+import java.math.RoundingMode
 
 class CalculationViewModel: ViewModel() {
     private val calculationLines: ArrayList<CalculationLine> = ArrayList()
@@ -14,29 +12,29 @@ class CalculationViewModel: ViewModel() {
     val lines = MutableLiveData<ArrayList<CalculationLine>>()
 
     init {
-        calculationLines.add(CalculationLine(0, 0, null, "", "0", true))
+        clear()
     }
 
     private fun compute(previous: CalculationLine, current: CalculationLine): String {
         val x = BigDecimal(previous.subtotal)
         val y = BigDecimal(current.operand)
         val operator = current.operator
-        var operand = ""
+        var operand = previous.subtotal
         if (operator == "+") {
             operand = x.plus(y).toPlainString()
         } else if (operator == "-") {
             operand = x.minus(y).toPlainString()
         } else if (operator == "*") {
             operand = x.times(y).toPlainString()
-        } else if (operator == "/") {
-            operand = x.divide(y).toPlainString()
+        } else if (operator == "/" && y != BigDecimal.ZERO) {
+            operand = x.divide(y, 2, RoundingMode.HALF_UP).toPlainString()
         }
         return operand
     }
 
     fun text(operand: String) {
         val current = calculationLines[calculationLines.size - 1]
-        if (current.operator.equals("=")) {
+        if (current.operator == "=") {
             return
         }
         current.operand += operand
@@ -45,7 +43,7 @@ class CalculationViewModel: ViewModel() {
 
     fun decimal() {
         val current = calculationLines[calculationLines.size - 1]
-        if (current.operator.equals("=")) {
+        if (current.operator == "=") {
             return
         }
         if (!current.operand.contains(".")) {
@@ -56,7 +54,7 @@ class CalculationViewModel: ViewModel() {
 
     fun backspace() {
         val current = calculationLines[calculationLines.size - 1]
-        if (current.operator.equals("=")) {
+        if (current.operator == "=") {
             return
         }
         val operand = current.operand
@@ -66,15 +64,15 @@ class CalculationViewModel: ViewModel() {
         lines.postValue(calculationLines)
     }
 
-    fun operator(operator: String?) {
-        if (operator.equals("=")) {
-            equal()
-        }
+    fun operator(operator: String) {
         val current = calculationLines[calculationLines.size - 1]
+        if (current.operator == null && current.operand.isEmpty()) {
+            return
+        }
         if (current.operand.isEmpty()) {
             current.operator = operator
         } else {
-            if (calculationLines.size > 1) {
+            if (calculationLines.size > 1 && current.operator != "=") {
                 val previous = calculationLines[calculationLines.size - 2]
                 current.subtotal = compute(previous, current)
             } else {
@@ -88,17 +86,13 @@ class CalculationViewModel: ViewModel() {
 
     fun equal() {
         val current = calculationLines[calculationLines.size - 1]
-        if (current.operator.equals("=")) {
+        if (calculationLines.size <= 1 || current.operator == "=") {
             return
         }
-        if (calculationLines.size > 1) {
-            val previous = calculationLines[calculationLines.size - 2]
-            current.subtotal = compute(previous, current)
-        } else {
-            current.subtotal = current.operand
-        }
+        val previous = calculationLines[calculationLines.size - 2]
+        current.subtotal = compute(previous, current)
         current.last = false
-        calculationLines.add(CalculationLine(0, 0, "=", current.subtotal, "0", true))
+        calculationLines.add(CalculationLine(0, 0, "=", current.subtotal, current.subtotal, true))
         lines.postValue(calculationLines)
     }
 
