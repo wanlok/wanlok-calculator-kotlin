@@ -9,45 +9,49 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
 
         <TextView
-            android:layout_width="40dp"
+            android:layout_width="@dimen/calculator_operator_width"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@{calculationLine.operator}"
-            android:textSize="@dimen/calculator_text_size_small"
+            android:textSize="@dimen/calculator_text_size"
             android:textColor="@color/black" />
 
         <HorizontalScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5">
+            android:layout_weight="0.5"
+            android:paddingRight="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_gravity="right"
+                android:gravity="center"
                 android:maxLines="1"
                 android:text="@{calculationLine.operand}"
-                android:textSize="@dimen/calculator_text_size_small"
+                android:textSize="@dimen/calculator_text_size"
                 android:textColor="@color/black" />
         </HorizontalScrollView>
 
         <HorizontalScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5">
+            android:layout_weight="0.5"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_gravity="right"
+                android:gravity="center"
                 android:maxLines="1"
                 android:text="@{calculationLine.subtotal}"
-                android:textSize="@dimen/calculator_text_size_small"
+                android:textSize="@dimen/calculator_text_size"
                 android:textColor="@color/black"
                 android:visibility="@{calculationLine.last ? View.GONE : View.VISIBLE}" />
         </HorizontalScrollView>

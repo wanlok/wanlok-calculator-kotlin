@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/calculator"
+        android:id="@+id/numberCalculator"
         android:icon="@drawable/ic_android_black_24dp"
-        android:title="Calculator"/>
+        android:title="Number Calculator"/>
 
     <item
         android:id="@+id/b"

@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:insetTop="0dp"
     android:insetBottom="0dp"
-    android:textSize="@dimen/calculator_text_size_big"
+    android:textSize="@dimen/calculator_text_size"
     android:textColor="@color/white"
+    android:backgroundTint="@color/green_1"
+    android:textAllCaps="false"
     app:cornerRadius="0dp" />

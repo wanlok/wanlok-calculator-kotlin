@@ -10,17 +10,73 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/calculator_view_height"
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/calculatorButtonLinearLayout"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="@dimen/calculator_operator_width"
+                android:layout_height="match_parent" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@color/gray_1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/titleLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/calculator_view_height"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="@dimen/calculator_operator_width"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center_vertical"
+                android:text="Values"
+                android:textSize="@dimen/calculator_text_size"
+                android:textColor="@color/black"
+                android:paddingRight="16dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="center_vertical"
+                android:text="Subtotal"
+                android:textSize="@dimen/calculator_text_size"
+                android:textColor="@color/black"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" />
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/calculationRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/titleLinearLayout"
             android:layout_above="@id/separatorView1" />
 
         <View
             android:id="@+id/separatorView1"
             android:layout_width="match_parent"
-            android:layout_height="8dp"
+            android:layout_height="0dp"
             android:layout_above="@id/calculatorButtonLinearLayout"
             android:background="@color/white" />
 
@@ -29,248 +85,257 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:background="@color/gray_2"
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/calculator_button_height"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/clearButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="C" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/calculator_view_height"
+                    android:orientation="horizontal">
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/clearButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="Esc" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25" />
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/backspaceButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="←" />
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/backspaceButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="←" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/divideButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="÷" />
-            </LinearLayout>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/calculator_button_height"
-                android:orientation="horizontal">
-
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/sevenButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="7" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/divideButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="÷" />
+                </LinearLayout>
 
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/eightButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="8" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/calculator_view_height"
+                    android:orientation="horizontal">
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/sevenButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="7" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/nineButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="9" />
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/eightButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="8" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/multiplyButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="×" />
-            </LinearLayout>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/nineButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="9" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/calculator_button_height"
-                android:orientation="horizontal">
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/fourButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="4" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
-
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/fiveButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="5" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/multiplyButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="×" />
+                </LinearLayout>
 
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/sixButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="6" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/calculator_view_height"
+                    android:orientation="horizontal">
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/fourButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="4" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/minusButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="−" />
-            </LinearLayout>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/fiveButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="5" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/calculator_button_height"
-                android:orientation="horizontal">
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/oneButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="1" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/sixButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="6" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/twoButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="2" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
-
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/threeButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="3" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/minusButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="−" />
+                </LinearLayout>
 
                 <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/addButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="+" />
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/calculator_view_height"
+                    android:orientation="horizontal">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/oneButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="1" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/calculator_button_height"
-                android:orientation="horizontal">
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
+
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/twoButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="2" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
+
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/threeButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="3" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
+
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/addButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="+" />
+                </LinearLayout>
 
                 <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25" />
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/calculator_view_height"
+                    android:orientation="horizontal">
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/zeroButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="0" />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/decimalButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="." />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/zeroButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="0" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent" />
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
 
-                <com.wanlok.calculator.customView.CalculatorButton
-                    android:id="@+id/equalButton"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="25"
-                    app:text="=" />
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/decimalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="." />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent" />
+
+                    <com.wanlok.calculator.customView.CalculatorButton
+                        android:id="@+id/equalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="25"
+                        app:text="=" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

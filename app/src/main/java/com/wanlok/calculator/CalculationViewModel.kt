@@ -24,9 +24,9 @@ class CalculationViewModel: ViewModel() {
             operand = x.plus(y).toPlainString()
         } else if (operator == "-") {
             operand = x.minus(y).toPlainString()
-        } else if (operator == "*") {
+        } else if (operator == "×") {
             operand = x.times(y).toPlainString()
-        } else if (operator == "/" && y != BigDecimal.ZERO) {
+        } else if (operator == "÷" && y != BigDecimal.ZERO) {
             operand = x.divide(y, 2, RoundingMode.HALF_UP).toPlainString()
         }
         return operand

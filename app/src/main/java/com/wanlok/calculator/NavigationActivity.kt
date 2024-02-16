@@ -149,11 +149,11 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
 
         map = HashMap()
         map?.let { map ->
-            map[R.id.calculator] = calculatorFragments
+            map[R.id.numberCalculator] = calculatorFragments
             map[R.id.b] = bFragments
         }
 
-        itemId = R.id.b
+        itemId = R.id.numberCalculator
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView?.setOnItemSelectedListener(this)

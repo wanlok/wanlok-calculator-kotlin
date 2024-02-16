@@ -39,7 +39,7 @@ class CalculatorFragment : NavigationFragment() {
     private lateinit var clearButton: CalculatorButton
 
     override fun getTitle(): String {
-        return "Calculator"
+        return "Number Calculator"
     }
 
     private fun onNumberButtonClick(view: View) {
@@ -66,11 +66,11 @@ class CalculatorFragment : NavigationFragment() {
     }
 
     private fun onMultiplyButtonClick(view: View) {
-        viewModel.operator("*")
+        viewModel.operator("×")
     }
 
     private fun onDivideButtonClick(view: View) {
-        viewModel.operator("/")
+        viewModel.operator("÷")
     }
 
     private fun onEqualButtonClick(view: View) {
@@ -94,6 +94,8 @@ class CalculatorFragment : NavigationFragment() {
 
         calculationRecyclerView = view.findViewById(R.id.calculationRecyclerView)
         calculationRecyclerView.layoutManager = LinearLayoutManager(activity)
+        calculationRecyclerView.setPadding(0, 0, 0, Utils.dp(16, context))
+        calculationRecyclerView.clipToPadding = false;
         calculationRecyclerView.adapter = ExampleAdapter(emptyList())
 
         viewModel.lines.observe(viewLifecycleOwner) { lines ->
