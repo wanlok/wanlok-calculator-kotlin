@@ -155,8 +155,11 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
 
         itemId = R.id.numberCalculator
 
+        supportActionBar?.elevation = 0F
+
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView?.setOnItemSelectedListener(this)
+        bottomNavigationView?.background = null
         updateBottomNavigation()
     }
 }
