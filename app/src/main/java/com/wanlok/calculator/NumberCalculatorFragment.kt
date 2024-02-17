@@ -171,13 +171,13 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         val errorMessage = "Invalid Conversion"
 
         viewModel.leftSpinnerSkipped.observe(viewLifecycleOwner) {
-            if (it) {
+            if (it && viewModel.clearing.value == false) {
                 Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
             }
         }
 
         viewModel.rightSpinnerSkipped.observe(viewLifecycleOwner) {
-            if (it) {
+            if (it && viewModel.clearing.value == false) {
                 Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
             }
         }

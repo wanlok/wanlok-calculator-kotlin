@@ -30,6 +30,8 @@ class NumberCalculatorViewModel: ViewModel() {
     val rightSpinnerSelectedItem = MutableLiveData<BindableSpinnerAdapter.SpinnerItem>()
     val rightSpinnerSkipped = MutableLiveData(false)
 
+    val clearing = MutableLiveData(false)
+
     val lines = MutableLiveData<ArrayList<CalculationLine>>()
 
     init {
@@ -216,11 +218,13 @@ class NumberCalculatorViewModel: ViewModel() {
     }
 
     fun clear() {
-//        leftSpinnerSelectedItem.value = leftSpinnerItemList.first()
-//        rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
+        clearing.value = true
+        leftSpinnerSelectedItem.value = leftSpinnerItemList.first()
+        rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
         calculationLines.clear()
         calculationLines.add(CalculationLine(0, 0, null, "", "0", null, true))
         lines.postValue(calculationLines)
+        clearing.value = false
     }
 
     fun remove(index: Int) {
