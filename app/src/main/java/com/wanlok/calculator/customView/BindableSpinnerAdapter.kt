@@ -12,6 +12,7 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.wanlok.calculator.R
+import java.math.BigDecimal
 
 class BindableSpinnerAdapter(context: Context, textViewResourceId: Int, private val values: List<SpinnerItem>): ArrayAdapter<BindableSpinnerAdapter.SpinnerItem>(context, textViewResourceId, values) {
 
@@ -23,7 +24,7 @@ class BindableSpinnerAdapter(context: Context, textViewResourceId: Int, private 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val label = super.getView(position, convertView, parent) as TextView
-        label.text = values[position].text
+        label.text = values[position].label
         return label
     }
 
@@ -33,11 +34,11 @@ class BindableSpinnerAdapter(context: Context, textViewResourceId: Int, private 
             view = LayoutInflater.from(context).inflate(R.layout.spinner_item, parent, false)
         }
         val textView: TextView = view!!.findViewById(R.id.textView)
-        textView.text = values[position].text
+        textView.text = values[position].label
         return view
     }
 
-    data class SpinnerItem(val text: String)
+    data class SpinnerItem(val label: String)
 
     companion object {
         @BindingAdapter(value = ["spinnerItems", "selectedSpinnerItem", "selectedSpinnerItemAttrChanged"], requireAll = false)
@@ -75,7 +76,7 @@ class BindableSpinnerAdapter(context: Context, textViewResourceId: Int, private 
         private fun setCurrentSelection(spinner: Spinner, selectedItem: SpinnerItem?): Boolean {
             selectedItem?.let {
                 for (index in 0 until spinner.adapter.count) {
-                    if (spinner.getItemAtPosition(index) == it.text) {
+                    if (spinner.getItemAtPosition(index) == it.label) {
                         spinner.setSelection(index)
                         return true
                     }

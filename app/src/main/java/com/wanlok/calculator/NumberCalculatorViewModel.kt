@@ -1,50 +1,134 @@
 package com.wanlok.calculator
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.wanlok.calculator.Utils.divide
+import com.wanlok.calculator.Utils.isZero
+import com.wanlok.calculator.Utils.minus
+import com.wanlok.calculator.Utils.multiply
+import com.wanlok.calculator.Utils.plus
 import com.wanlok.calculator.customView.BindableSpinnerAdapter
 import com.wanlok.calculator.model.CalculationLine
-import java.math.BigDecimal
-import java.math.RoundingMode
 
 class NumberCalculatorViewModel: ViewModel() {
+    private val leftSpinnerItemList = listOf(BindableSpinnerAdapter.SpinnerItem("Numbers"))
+    private val rightSpinnerItemList = listOf(BindableSpinnerAdapter.SpinnerItem("Subtotal"))
+    private val spinnerItemList = listOf(
+        BindableSpinnerAdapter.SpinnerItem("m²"),
+        BindableSpinnerAdapter.SpinnerItem("ft²"),
+    )
+
     private val calculationLines: ArrayList<CalculationLine> = ArrayList()
 
+    val leftSpinnerItems = MutableLiveData(leftSpinnerItemList + spinnerItemList)
+    val leftSpinnerSelectedItem = MutableLiveData<BindableSpinnerAdapter.SpinnerItem>()
+    val leftSpinnerSkipped = MutableLiveData(false)
+
+    val rightSpinnerItems = MutableLiveData(rightSpinnerItemList + spinnerItemList)
+    val rightSpinnerSelectedItem = MutableLiveData<BindableSpinnerAdapter.SpinnerItem>()
+    val rightSpinnerSkipped = MutableLiveData(false)
+
     val lines = MutableLiveData<ArrayList<CalculationLine>>()
-
-    val leftSpinnerItems = MutableLiveData(listOf(
-        BindableSpinnerAdapter.SpinnerItem("Numbers"),
-        BindableSpinnerAdapter.SpinnerItem("B"),
-        BindableSpinnerAdapter.SpinnerItem("C")
-    ))
-
-    val selectedLeftSpinnerItem = MutableLiveData<BindableSpinnerAdapter.SpinnerItem>()
-
-    val rightSpinnerItems = MutableLiveData(listOf(
-        BindableSpinnerAdapter.SpinnerItem("Subtotal"),
-        BindableSpinnerAdapter.SpinnerItem("D"),
-        BindableSpinnerAdapter.SpinnerItem("E")
-    ))
-
-    val selectedRightSpinnerItem = MutableLiveData<BindableSpinnerAdapter.SpinnerItem>()
 
     init {
         clear()
     }
 
+    private fun convert(calculationLine: CalculationLine?) {
+        val a = "0.09290304"
+        calculationLine?.let { calculationLine ->
+            if (calculationLine.operand.isNotEmpty()) {
+                getLeftRightLabels { left, right ->
+                    if (left == "ft²" && right == "m²") {
+                        calculationLine.convertedValue = multiply(calculationLine.operand, a)
+                    } else if (left == "m²" && right == "ft²") {
+                        calculationLine.convertedValue = divide(calculationLine.operand, a)
+                    } else {
+                        calculationLine.convertedValue = null
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getLeftRightLabels(callback: (String, String) -> Unit) {
+        leftSpinnerSelectedItem.value?.let { selectedLeftSpinnerItem ->
+            rightSpinnerSelectedItem.value?.let { selectedRightSpinnerItem ->
+                callback(selectedLeftSpinnerItem.label, selectedRightSpinnerItem.label)
+            }
+        }
+    }
+
+    private fun isSupported(left: String, right: String): Boolean {
+        var supported = false
+        if (right == "Subtotal") {
+            supported = true
+        } else if (left == "ft²" && right == "m²") {
+            supported = true
+        } else if (left == "m²" && right == "ft²") {
+            supported = true
+        }
+        return supported
+    }
+
+    fun leftSpinner() {
+        if (leftSpinnerSkipped.value == true) {
+            return
+        }
+        getLeftRightLabels { left, right ->
+            if (!isSupported(left, right)) {
+                rightSpinnerSkipped.value = true
+                rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    rightSpinnerSkipped.value = false
+                }, 100)
+            }
+        }
+        for (calculationLine in calculationLines) {
+            convert(calculationLine)
+        }
+        lines.postValue(calculationLines)
+    }
+
+    fun rightSpinner() {
+        if (rightSpinnerSkipped.value == true) {
+            return
+        }
+        getLeftRightLabels { left, right ->
+            if (!isSupported(left, right)) {
+                rightSpinnerSkipped.value = true
+                rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    rightSpinnerSkipped.value = false
+                }, 100)
+//                leftSpinnerSkipped = true
+//                leftSpinnerSelectedItem.value = numberSpinnerItemList.first()
+//                Handler(Looper.getMainLooper()).postDelayed({
+//                    leftSpinnerSkipped = false
+//                }, 100)
+            }
+        }
+        for (calculationLine in calculationLines) {
+            convert(calculationLine)
+        }
+        lines.postValue(calculationLines)
+    }
+
     private fun compute(previous: CalculationLine, current: CalculationLine): String {
-        val x = BigDecimal(previous.subtotal)
-        val y = BigDecimal(current.operand)
+        val x = previous.subtotal
+        val y = current.operand
         val operator = current.operator
         var operand = previous.subtotal
         if (operator == "+") {
-            operand = x.plus(y).toPlainString()
+            operand = plus(x, y)
         } else if (operator == "-") {
-            operand = x.minus(y).toPlainString()
+            operand = minus(x, y)
         } else if (operator == "×") {
-            operand = x.times(y).toPlainString()
-        } else if (operator == "÷" && y != BigDecimal.ZERO) {
-            operand = x.divide(y, 2, RoundingMode.HALF_UP).toPlainString()
+            operand = multiply(x, y)
+        } else if (operator == "÷" && isZero(y)) {
+            operand = divide(x, y)
         }
         return operand
     }
@@ -96,13 +180,15 @@ class NumberCalculatorViewModel: ViewModel() {
                 current.subtotal = current.operand
             }
             current.last = false
-            calculationLines.add(CalculationLine(0, 0, operator, "", "0", true))
+            calculationLines.add(CalculationLine(0, 0, operator, "", "0", null, true))
         }
+        convert(current)
         lines.postValue(calculationLines)
     }
 
     fun equal() {
-        val current = calculationLines[calculationLines.size - 1]
+        var current = calculationLines[calculationLines.size - 1]
+        var next: CalculationLine? = null
         if ((current.operator == null && current.operand.isEmpty()) || current.operand == ".") {
             return
         }
@@ -121,21 +207,26 @@ class NumberCalculatorViewModel: ViewModel() {
                 current.subtotal = current.operand
             }
             current.last = false
-            calculationLines.add(CalculationLine(0, 0, "=", current.subtotal, current.subtotal, true))
+            next = CalculationLine(0, 0, "=", current.subtotal, current.subtotal, null, true)
+            calculationLines.add(next)
         }
+        convert(current)
+        convert(next)
         lines.postValue(calculationLines)
     }
 
     fun clear() {
+//        leftSpinnerSelectedItem.value = leftSpinnerItemList.first()
+//        rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
         calculationLines.clear()
-        calculationLines.add(CalculationLine(0, 0, null, "", "0", true))
+        calculationLines.add(CalculationLine(0, 0, null, "", "0", null, true))
         lines.postValue(calculationLines)
     }
 
     fun remove(index: Int) {
         calculationLines.removeAt(index)
         if (calculationLines.size == 0) {
-            calculationLines.add(CalculationLine(0, 0, null, "", "0", true))
+            calculationLines.add(CalculationLine(0, 0, null, "", "0", null, true))
         }
         for (i in 0 until calculationLines.size) {
             val current = calculationLines[i]
@@ -151,18 +242,6 @@ class NumberCalculatorViewModel: ViewModel() {
             }
             current.last = i == calculationLines.size - 1
         }
-//        var i = 0
-//        while (i < calculationLines.size) {
-//            if (i > 0) {
-//                val previous = calculationLines[i - 1]
-//                val current = calculationLines[i]
-//                if (previous.operator == "=" && current.operator == "=") {
-//                    calculationLines.removeAt(i - 1)
-//                    i = 0
-//                }
-//            }
-//            i += 1
-//        }
         lines.postValue(calculationLines)
     }
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -118,12 +119,6 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
             itemTouchHelper.attachToRecyclerView(calculationRecyclerView)
         }
 
-        viewModel.lines.observe(viewLifecycleOwner) { lines ->
-            val adapter = calculationRecyclerView.adapter as ExampleAdapter
-            adapter.updateList(lines)
-            calculationRecyclerView.scrollToPosition(adapter.itemCount - 1);
-        }
-
         zeroButton = view.findViewById(R.id.zeroButton)
         oneButton = view.findViewById(R.id.oneButton)
         twoButton = view.findViewById(R.id.twoButton)
@@ -164,6 +159,34 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
 
         clearButton = view.findViewById(R.id.clearButton)
         clearButton.setOnClickListener { onClearButtonClick(it) }
+
+        viewModel.leftSpinnerSelectedItem.observe(viewLifecycleOwner) {
+            viewModel.leftSpinner()
+        }
+
+        viewModel.rightSpinnerSelectedItem.observe(viewLifecycleOwner) {
+            viewModel.rightSpinner()
+        }
+
+        val errorMessage = "Invalid Conversion"
+
+        viewModel.leftSpinnerSkipped.observe(viewLifecycleOwner) {
+            if (it) {
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        viewModel.rightSpinnerSkipped.observe(viewLifecycleOwner) {
+            if (it) {
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            }
+        }
+
+        viewModel.lines.observe(viewLifecycleOwner) { lines ->
+            val adapter = calculationRecyclerView.adapter as ExampleAdapter
+            adapter.updateList(lines)
+            calculationRecyclerView.scrollToPosition(adapter.itemCount - 1);
+        }
 
         return view
     }

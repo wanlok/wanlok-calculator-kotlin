@@ -6,4 +6,5 @@ class CalculationLine(
     var operator: String?,
     var operand: String,
     var subtotal: String,
+    var convertedValue: String?,
     var last: Boolean)

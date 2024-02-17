@@ -57,7 +57,7 @@
                     android:textSize="@dimen/calculator_text_size"
                     android:paddingLeft="8dp"
                     spinnerItems="@{viewModel.leftSpinnerItems}"
-                    selectedSpinnerItem="@={viewModel.selectedLeftSpinnerItem}" />
+                    selectedSpinnerItem="@={viewModel.leftSpinnerSelectedItem}" />
 
                 <View
                     android:layout_width="match_parent"
@@ -80,7 +80,7 @@
                     android:textSize="@dimen/calculator_text_size"
                     android:paddingLeft="8dp"
                     spinnerItems="@{viewModel.rightSpinnerItems}"
-                    selectedSpinnerItem="@={viewModel.selectedRightSpinnerItem}" />
+                    selectedSpinnerItem="@={viewModel.rightSpinnerSelectedItem}" />
 
                 <View
                     android:layout_width="match_parent"

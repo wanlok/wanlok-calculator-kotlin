@@ -59,10 +59,10 @@
                 android:layout_gravity="right"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="@{calculationLine.subtotal}"
+                android:text="@{calculationLine.convertedValue == null ? calculationLine.subtotal : calculationLine.convertedValue}"
                 android:textSize="@dimen/calculator_text_size"
                 android:textColor="@color/black"
-                android:visibility="@{calculationLine.last ? View.GONE : View.VISIBLE}" />
+                android:visibility="@{calculationLine.convertedValue == null ? (calculationLine.last ? View.GONE : View.VISIBLE) : View.VISIBLE}" />
         </HorizontalScrollView>
     </LinearLayout>
 </layout>
