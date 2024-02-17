@@ -26,7 +26,7 @@ class CalculatorButton (context: Context, attrs: AttributeSet): LinearLayout(con
     }
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_calculator_button, this, true)
+        LayoutInflater.from(context).inflate(R.layout.button_calculator, this, true)
         orientation = VERTICAL
         button = findViewById(R.id.button)
         attrs?.let {

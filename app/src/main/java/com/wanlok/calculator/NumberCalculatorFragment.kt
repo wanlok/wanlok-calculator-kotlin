@@ -4,16 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Spinner
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wanlok.calculator.customView.CalculatorButton
+import com.wanlok.calculator.customView.ExampleAdapter
+import com.wanlok.calculator.customView.SwipeListener
+import com.wanlok.calculator.customView.SwipeSimpleCallback
 import com.wanlok.calculator.databinding.FragmentCalculatorBinding
+
 
 class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
     private val viewModel: NumberCalculatorViewModel by viewModels()
+
+    private lateinit var leftSpinner: Spinner
+    private lateinit var rightSpinner: Spinner
 
     private lateinit var calculationRecyclerView: RecyclerView
 
@@ -101,7 +109,7 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
 
         calculationRecyclerView = view.findViewById(R.id.calculationRecyclerView)
         calculationRecyclerView.layoutManager = LinearLayoutManager(activity)
-        calculationRecyclerView.setPadding(0, 0, 0, Utils.dp(16, context))
+        calculationRecyclerView.setPadding(0, Utils.dp(8, context), 0, Utils.dp(8, context))
         calculationRecyclerView.clipToPadding = false;
         calculationRecyclerView.adapter = ExampleAdapter(emptyList())
 

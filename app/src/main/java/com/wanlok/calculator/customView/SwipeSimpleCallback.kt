@@ -1,4 +1,4 @@
-package com.wanlok.calculator
+package com.wanlok.calculator.customView
 
 import android.R
 import android.content.Context
@@ -7,6 +7,7 @@ import android.graphics.Paint
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.wanlok.calculator.customView.SwipeListener
 
 
 class SwipeSimpleCallback(private var context: Context, var swipeListener: SwipeListener): ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {

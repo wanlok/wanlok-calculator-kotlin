@@ -1,9 +1,10 @@
-package com.wanlok.calculator
+package com.wanlok.calculator.customView
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.wanlok.calculator.R
 import com.wanlok.calculator.databinding.ItemExampleBinding
 import com.wanlok.calculator.model.CalculationLine
 

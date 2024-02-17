@@ -38,37 +38,57 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp">
+            android:orientation="horizontal">
 
             <View
                 android:layout_width="@dimen/calculator_operator_width"
                 android:layout_height="match_parent" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:gravity="center_vertical"
-                android:text="Numbers"
-                android:textSize="@dimen/calculator_text_size"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp" />
+                android:orientation="vertical">
 
-            <TextView
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:spinnerMode="dropdown"
+                    android:textSize="@dimen/calculator_text_size"
+                    android:paddingLeft="8dp"
+                    spinnerItems="@{viewModel.leftSpinnerItems}"
+                    selectedSpinnerItem="@={viewModel.selectedLeftSpinnerItem}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_2"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:gravity="center_vertical"
-                android:text="Subtotal"
-                android:textSize="@dimen/calculator_text_size"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp" />
+                android:orientation="vertical">
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:spinnerMode="dropdown"
+                    android:textSize="@dimen/calculator_text_size"
+                    android:paddingLeft="8dp"
+                    spinnerItems="@{viewModel.rightSpinnerItems}"
+                    selectedSpinnerItem="@={viewModel.selectedRightSpinnerItem}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_2"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

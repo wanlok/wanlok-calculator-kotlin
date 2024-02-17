@@ -2,6 +2,7 @@ package com.wanlok.calculator
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.wanlok.calculator.customView.BindableSpinnerAdapter
 import com.wanlok.calculator.model.CalculationLine
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -10,6 +11,22 @@ class NumberCalculatorViewModel: ViewModel() {
     private val calculationLines: ArrayList<CalculationLine> = ArrayList()
 
     val lines = MutableLiveData<ArrayList<CalculationLine>>()
+
+    val leftSpinnerItems = MutableLiveData(listOf(
+        BindableSpinnerAdapter.SpinnerItem("Numbers"),
+        BindableSpinnerAdapter.SpinnerItem("B"),
+        BindableSpinnerAdapter.SpinnerItem("C")
+    ))
+
+    val selectedLeftSpinnerItem = MutableLiveData<BindableSpinnerAdapter.SpinnerItem>()
+
+    val rightSpinnerItems = MutableLiveData(listOf(
+        BindableSpinnerAdapter.SpinnerItem("Subtotal"),
+        BindableSpinnerAdapter.SpinnerItem("D"),
+        BindableSpinnerAdapter.SpinnerItem("E")
+    ))
+
+    val selectedRightSpinnerItem = MutableLiveData<BindableSpinnerAdapter.SpinnerItem>()
 
     init {
         clear()
