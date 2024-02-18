@@ -16,28 +16,32 @@ object Utils {
         return value.toInt()
     }
 
+    fun stripTrailingZeros(x: String): String {
+        return BigDecimal(x).stripTrailingZeros().toPlainString()
+    }
+
     fun plus(x: String, y: String): String {
-        return BigDecimal(x).plus(BigDecimal(y)).toPlainString()
+        return stripTrailingZeros(BigDecimal(x).plus(BigDecimal(y)).toPlainString())
     }
 
     fun minus(x: String, y: String): String {
-        return BigDecimal(x).minus(BigDecimal(y)).toPlainString()
+        return stripTrailingZeros(BigDecimal(x).minus(BigDecimal(y)).toPlainString())
     }
 
     fun multiply(x: String, y: String): String {
-        return BigDecimal(x).multiply(BigDecimal(y)).toPlainString()
+        return stripTrailingZeros(BigDecimal(x).multiply(BigDecimal(y)).toPlainString())
     }
 
     fun divide(x: String, y: String): String {
-        return BigDecimal(x).divide(BigDecimal(y), 2, RoundingMode.HALF_UP).toPlainString()
+        return stripTrailingZeros(BigDecimal(x).divide(BigDecimal(y), 2, RoundingMode.HALF_UP).toPlainString())
     }
 
     fun power(x: String, power: String): String {
-        return BigDecimal(x).pow(power.toInt()).toPlainString()
+        return stripTrailingZeros(BigDecimal(x).pow(power.toInt()).toPlainString())
     }
 
     fun squareroot(x: String): String {
-        return sqrt(x.toDouble()).toString()
+        return stripTrailingZeros(sqrt(x.toDouble()).toString())
     }
 
     fun isZero(x: String): Boolean {

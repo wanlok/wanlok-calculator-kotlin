@@ -9,6 +9,7 @@ import com.wanlok.calculator.Utils.isZero
 import com.wanlok.calculator.Utils.minus
 import com.wanlok.calculator.Utils.multiply
 import com.wanlok.calculator.Utils.plus
+import com.wanlok.calculator.Utils.stripTrailingZeros
 import com.wanlok.calculator.customView.BindableSpinnerAdapter
 import com.wanlok.calculator.model.CalculationLine
 
@@ -166,6 +167,7 @@ class NumberCalculatorViewModel: ViewModel() {
         if ((current.operator == null && current.operand.isEmpty()) || current.operand == ".") {
             return
         }
+        current.operand = stripTrailingZeros(current.operand)
         if (current.operand.isEmpty()) {
             current.operator = operator
         } else {
@@ -188,6 +190,7 @@ class NumberCalculatorViewModel: ViewModel() {
         if ((current.operator == null && current.operand.isEmpty()) || current.operand == ".") {
             return
         }
+        current.operand = stripTrailingZeros(current.operand)
         if (current.operand.isEmpty()) {
             if (calculationLines.size > 1) {
                 val previous = calculationLines[calculationLines.size - 2]
