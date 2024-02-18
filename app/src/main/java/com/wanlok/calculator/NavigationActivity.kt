@@ -1,16 +1,11 @@
 package com.wanlok.calculator
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
-import com.wanlok.calculator.customView.MenuItemClickListener
 
 
 class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
@@ -33,8 +28,7 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
     }
 
     private fun updateBottomNavigation() {
-        val menu = bottomNavigationView?.menu
-        if (menu != null) {
+        bottomNavigationView?.menu?.let { menu ->
             for (i in 0 until menu.size()) {
                 val menuItem = menu.getItem(i)
                 if (menuItem.itemId == itemId) {
@@ -60,31 +54,9 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
         super.onBackPressed()
     }
 
-    fun dummy(menuItem: MenuItem) {
-        map?.let { map ->
-            itemId?.let { itemId ->
-                map[itemId]?.let { fragments ->
-                    if (fragments.isNotEmpty()) {
-                        fragments.last().let { fragment ->
-                            (fragment as? MenuItemClickListener).let { menuItemClickListener ->
-                                menuItemClickListener?.onClick(menuItem)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
-            return true
-        } else if (item.itemId == R.id.item_filter) {
-            dummy(item)
-            return true
-        } else if (item.itemId == R.id.action_settings) {
-            Log.d("ROBERT", "action_settings")
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -148,9 +120,8 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val fragmentManager = supportFragmentManager
         val itemId = item.itemId
-        if (fragmentManager.fragments.size == 0 || itemId != this.itemId) {
+        if (supportFragmentManager.fragments.size == 0 || itemId != this.itemId) {
             clearStack()
             this.itemId = itemId
             buildStack()
@@ -188,10 +159,5 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
         bottomNavigationView?.setOnItemSelectedListener(this)
         bottomNavigationView?.background = null
         updateBottomNavigation()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.top_menu, menu)
-        return true
     }
 }

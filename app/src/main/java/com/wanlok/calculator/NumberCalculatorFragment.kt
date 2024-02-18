@@ -3,10 +3,11 @@ package com.wanlok.calculator
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -15,13 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wanlok.calculator.customView.CalculatorButton
 import com.wanlok.calculator.customView.ExampleAdapter
-import com.wanlok.calculator.customView.MenuItemClickListener
 import com.wanlok.calculator.customView.SwipeListener
 import com.wanlok.calculator.customView.SwipeSimpleCallback
 import com.wanlok.calculator.databinding.FragmentCalculatorBinding
 
 
-class NumberCalculatorFragment : NavigationFragment(), MenuItemClickListener, SwipeListener {
+class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
     private val viewModel: NumberCalculatorViewModel by viewModels()
 
     private lateinit var calculationRecyclerView: RecyclerView
@@ -97,18 +97,13 @@ class NumberCalculatorFragment : NavigationFragment(), MenuItemClickListener, Sw
         viewModel.clear()
     }
 
-    override fun onClick(menuItem: MenuItem) {
-        Log.d("ROBERT", "menuItem detected! " + menuItem.itemId)
-        view?.let {
-            open(A1Fragment(), it)
-        }
-    }
-
     override fun onSwipe(direction: Int, position: Int) {
         viewModel.remove(position)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true);
+
         val binding = DataBindingUtil.inflate<FragmentCalculatorBinding>(inflater, R.layout.fragment_calculator, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -194,6 +189,26 @@ class NumberCalculatorFragment : NavigationFragment(), MenuItemClickListener, Sw
         }
 
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.top_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_filter ->            {
+
+                // Do onlick on menu action here
+                Log.d("ROBERT", "item_filter found")
+                view?.let {
+                    open(A1Fragment(), it)
+                }
+
+            }
+        }
+        return false
     }
 }
 
