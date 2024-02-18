@@ -4,16 +4,18 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
+import com.wanlok.calculator.customView.MenuItemClickListener
 
 
 class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListener {
     private var bottomNavigationView: BottomNavigationView? = null
-    private var previousView: View? = null
+//    private var previousView: View? = null
     private var map: MutableMap<Int, ArrayList<NavigationFragment>>? = null
     private var itemId: Int? = null
 
@@ -46,12 +48,29 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
     override fun onBackPressed() {
         map?.let { map ->
             itemId?.let { itemId ->
-                val fragments = map[itemId]
-                if (fragments != null) {
-                    fragments.remove(fragments[fragments.size - 1])
-                    previousView = null
+                map[itemId]?.let { fragments ->
+                    if (fragments.size > 1) {
+                        fragments.remove(fragments[fragments.size - 1])
+//                        previousView = null
+                    }
                     updateTopNavigation(fragments.size > 1)
-                    super.onBackPressed()
+                }
+            }
+        }
+        super.onBackPressed()
+    }
+
+    fun dummy(menuItem: MenuItem) {
+        map?.let { map ->
+            itemId?.let { itemId ->
+                map[itemId]?.let { fragments ->
+                    if (fragments.isNotEmpty()) {
+                        fragments.last().let { fragment ->
+                            (fragment as? MenuItemClickListener).let { menuItemClickListener ->
+                                menuItemClickListener?.onClick(menuItem)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -60,6 +79,12 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             onBackPressed()
+            return true
+        } else if (item.itemId == R.id.item_filter) {
+            dummy(item)
+            return true
+        } else if (item.itemId == R.id.action_settings) {
+            Log.d("ROBERT", "action_settings")
             return true
         }
         return super.onOptionsItemSelected(item)
@@ -83,24 +108,23 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
     }
 
     fun open(fragment: NavigationFragment, view: View) {
-        if (view !== previousView) {
+//        if (view !== previousView) {
             map?.let { map ->
                 itemId?.let { itemId ->
                     map[itemId]?.add(fragment)
                     add(fragment)
                 }
             }
-        }
-        previousView = view
+//        }
+//        previousView = view
     }
 
     private fun clearStack() {
         map?.let { map ->
             itemId?.let { itemId ->
                 map[itemId]?.let { fragments ->
-                    val fragmentManager = supportFragmentManager
                     for (i in fragments.indices) {
-                        fragmentManager.popBackStack()
+                        supportFragmentManager.popBackStack()
                     }
                 }
             }
@@ -164,5 +188,10 @@ class NavigationActivity : AppCompatActivity(), NavigationBarView.OnItemSelected
         bottomNavigationView?.setOnItemSelectedListener(this)
         bottomNavigationView?.background = null
         updateBottomNavigation()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.top_menu, menu)
+        return true
     }
 }

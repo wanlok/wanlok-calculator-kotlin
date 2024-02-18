@@ -1,7 +1,9 @@
 package com.wanlok.calculator
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Spinner
@@ -13,12 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wanlok.calculator.customView.CalculatorButton
 import com.wanlok.calculator.customView.ExampleAdapter
+import com.wanlok.calculator.customView.MenuItemClickListener
 import com.wanlok.calculator.customView.SwipeListener
 import com.wanlok.calculator.customView.SwipeSimpleCallback
 import com.wanlok.calculator.databinding.FragmentCalculatorBinding
 
 
-class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
+class NumberCalculatorFragment : NavigationFragment(), MenuItemClickListener, SwipeListener {
     private val viewModel: NumberCalculatorViewModel by viewModels()
 
     private lateinit var calculationRecyclerView: RecyclerView
@@ -92,6 +95,13 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
 
     private fun onClearButtonClick(view: View) {
         viewModel.clear()
+    }
+
+    override fun onClick(menuItem: MenuItem) {
+        Log.d("ROBERT", "menuItem detected! " + menuItem.itemId)
+        view?.let {
+            open(A1Fragment(), it)
+        }
     }
 
     override fun onSwipe(direction: Int, position: Int) {
