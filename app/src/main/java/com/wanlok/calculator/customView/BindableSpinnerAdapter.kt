@@ -38,7 +38,7 @@ class BindableSpinnerAdapter(context: Context, textViewResourceId: Int, private 
         return view
     }
 
-    data class SpinnerItem(val label: String)
+    data class SpinnerItem(val label: String, val type: Int, val encode: (String) -> String, val decode: (String) -> String)
 
     companion object {
         @BindingAdapter(value = ["spinnerItems", "selectedSpinnerItem", "selectedSpinnerItemAttrChanged"], requireAll = false)

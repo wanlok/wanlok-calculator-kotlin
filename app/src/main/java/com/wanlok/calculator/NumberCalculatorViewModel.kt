@@ -9,15 +9,28 @@ import com.wanlok.calculator.Utils.isZero
 import com.wanlok.calculator.Utils.minus
 import com.wanlok.calculator.Utils.multiply
 import com.wanlok.calculator.Utils.plus
+import com.wanlok.calculator.Utils.power
+import com.wanlok.calculator.Utils.squareroot
 import com.wanlok.calculator.customView.BindableSpinnerAdapter
 import com.wanlok.calculator.model.CalculationLine
 
 class NumberCalculatorViewModel: ViewModel() {
-    private val leftSpinnerItemList = listOf(BindableSpinnerAdapter.SpinnerItem("Numbers"))
-    private val rightSpinnerItemList = listOf(BindableSpinnerAdapter.SpinnerItem("Subtotal"))
+    private val leftSpinnerItemList = listOf(
+        BindableSpinnerAdapter.SpinnerItem("Numbers", 0, { x: String -> x }, { x: String -> x })
+    )
+
+    private val rightSpinnerItemList = listOf(
+        BindableSpinnerAdapter.SpinnerItem("Subtotal", 0, { x: String -> x }, { x: String -> x })
+    )
+
     private val spinnerItemList = listOf(
-        BindableSpinnerAdapter.SpinnerItem("m²"),
-        BindableSpinnerAdapter.SpinnerItem("ft²"),
+        BindableSpinnerAdapter.SpinnerItem("Square", 0, { x: String -> squareroot(x) }, { x: String -> power(x, "2") }),
+        BindableSpinnerAdapter.SpinnerItem("Square root", 0, { x: String -> power(x, "2") }, { x: String -> squareroot(x) }),
+        BindableSpinnerAdapter.SpinnerItem("cm", 1, { x: String -> x }, { x: String -> x }),
+        BindableSpinnerAdapter.SpinnerItem("m", 1, { x: String -> multiply(x, "100") }, { x: String -> divide(x, "100") }),
+        BindableSpinnerAdapter.SpinnerItem("ft", 1, { x: String -> multiply(x, "30.48") }, { x: String -> divide(x, "30.48") }),
+        BindableSpinnerAdapter.SpinnerItem("m²", 2, { x: String -> x }, { x: String -> x }),
+        BindableSpinnerAdapter.SpinnerItem("ft²", 2, { x: String -> multiply(x, "0.09290304") }, { x: String -> divide(x, "0.09290304") }),
     )
 
     private val calculationLines: ArrayList<CalculationLine> = ArrayList()
@@ -38,15 +51,21 @@ class NumberCalculatorViewModel: ViewModel() {
         clear()
     }
 
+    private fun getSelectedSpinnerItems(callback: (BindableSpinnerAdapter.SpinnerItem, BindableSpinnerAdapter.SpinnerItem) -> Unit) {
+        leftSpinnerSelectedItem.value?.let { leftSpinnerItem ->
+            rightSpinnerSelectedItem.value?.let { rightSpinnerItem ->
+                callback(leftSpinnerItem, rightSpinnerItem)
+            }
+        }
+    }
+
     private fun convert(calculationLine: CalculationLine?) {
         val a = "0.09290304"
         calculationLine?.let { calculationLine ->
             if (calculationLine.operand.isNotEmpty()) {
-                getLeftRightLabels { left, right ->
-                    if (left == "ft²" && right == "m²") {
-                        calculationLine.convertedValue = multiply(calculationLine.operand, a)
-                    } else if (left == "m²" && right == "ft²") {
-                        calculationLine.convertedValue = divide(calculationLine.operand, a)
+                getSelectedSpinnerItems { leftSpinnerItem, rightSpinnerItem ->
+                    if (leftSpinnerItem.type == rightSpinnerItem.type) {
+                        calculationLine.convertedValue = rightSpinnerItem.decode(leftSpinnerItem.encode(calculationLine.operand))
                     } else {
                         calculationLine.convertedValue = null
                     }
@@ -55,32 +74,12 @@ class NumberCalculatorViewModel: ViewModel() {
         }
     }
 
-    private fun getLeftRightLabels(callback: (String, String) -> Unit) {
-        leftSpinnerSelectedItem.value?.let { selectedLeftSpinnerItem ->
-            rightSpinnerSelectedItem.value?.let { selectedRightSpinnerItem ->
-                callback(selectedLeftSpinnerItem.label, selectedRightSpinnerItem.label)
-            }
-        }
-    }
-
-    private fun isSupported(left: String, right: String): Boolean {
-        var supported = false
-        if (right == "Subtotal") {
-            supported = true
-        } else if (left == "ft²" && right == "m²") {
-            supported = true
-        } else if (left == "m²" && right == "ft²") {
-            supported = true
-        }
-        return supported
-    }
-
     fun leftSpinner() {
         if (leftSpinnerSkipped.value == true) {
             return
         }
-        getLeftRightLabels { left, right ->
-            if (!isSupported(left, right)) {
+        getSelectedSpinnerItems { selectedLeftSpinnerItem, selectedRightSpinnerItem ->
+            if (selectedLeftSpinnerItem.type != selectedRightSpinnerItem.type) {
                 rightSpinnerSkipped.value = true
                 rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -98,8 +97,8 @@ class NumberCalculatorViewModel: ViewModel() {
         if (rightSpinnerSkipped.value == true) {
             return
         }
-        getLeftRightLabels { left, right ->
-            if (!isSupported(left, right)) {
+        getSelectedSpinnerItems { selectedLeftSpinnerItem, selectedRightSpinnerItem ->
+            if (selectedLeftSpinnerItem.type != selectedRightSpinnerItem.type) {
                 rightSpinnerSkipped.value = true
                 rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -232,8 +231,9 @@ class NumberCalculatorViewModel: ViewModel() {
         if (calculationLines.size == 0) {
             calculationLines.add(CalculationLine(0, 0, null, "", "0", null, true))
         }
+        var current: CalculationLine? = null
         for (i in 0 until calculationLines.size) {
-            val current = calculationLines[i]
+            current = calculationLines[i]
             if (i == 0) {
                 current.subtotal = current.operand
                 current.operator = null
@@ -246,6 +246,7 @@ class NumberCalculatorViewModel: ViewModel() {
             }
             current.last = i == calculationLines.size - 1
         }
+        convert(current)
         lines.postValue(calculationLines)
     }
 }
