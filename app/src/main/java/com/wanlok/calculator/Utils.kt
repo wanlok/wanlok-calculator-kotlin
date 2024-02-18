@@ -1,6 +1,7 @@
 package com.wanlok.calculator
 
 import android.content.Context
+import android.util.Log
 import android.util.TypedValue
 import android.util.TypedValue.COMPLEX_UNIT_DIP
 import java.math.BigDecimal
@@ -17,7 +18,7 @@ object Utils {
     }
 
     fun stripTrailingZeros(x: String): String {
-        return BigDecimal(x).stripTrailingZeros().toPlainString()
+        return if (x.isEmpty()) "" else BigDecimal(x).stripTrailingZeros().toPlainString()
     }
 
     fun plus(x: String, y: String): String {
