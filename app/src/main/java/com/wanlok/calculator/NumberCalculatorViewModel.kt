@@ -9,8 +9,6 @@ import com.wanlok.calculator.Utils.isZero
 import com.wanlok.calculator.Utils.minus
 import com.wanlok.calculator.Utils.multiply
 import com.wanlok.calculator.Utils.plus
-import com.wanlok.calculator.Utils.power
-import com.wanlok.calculator.Utils.squareroot
 import com.wanlok.calculator.customView.BindableSpinnerAdapter
 import com.wanlok.calculator.model.CalculationLine
 
@@ -24,8 +22,8 @@ class NumberCalculatorViewModel: ViewModel() {
     )
 
     private val spinnerItemList = listOf(
-        BindableSpinnerAdapter.SpinnerItem("Square", 0, { x: String -> squareroot(x) }, { x: String -> power(x, "2") }),
-        BindableSpinnerAdapter.SpinnerItem("Square root", 0, { x: String -> power(x, "2") }, { x: String -> squareroot(x) }),
+//        BindableSpinnerAdapter.SpinnerItem("Square", 0, { x: String -> squareroot(x) }, { x: String -> power(x, "2") }),
+//        BindableSpinnerAdapter.SpinnerItem("Square root", 0, { x: String -> power(x, "2") }, { x: String -> squareroot(x) }),
         BindableSpinnerAdapter.SpinnerItem("cm", 1, { x: String -> x }, { x: String -> x }),
         BindableSpinnerAdapter.SpinnerItem("m", 1, { x: String -> multiply(x, "100") }, { x: String -> divide(x, "100") }),
         BindableSpinnerAdapter.SpinnerItem("ft", 1, { x: String -> multiply(x, "30.48") }, { x: String -> divide(x, "30.48") }),
@@ -42,6 +40,7 @@ class NumberCalculatorViewModel: ViewModel() {
     val rightSpinnerItems = MutableLiveData(rightSpinnerItemList + spinnerItemList)
     val rightSpinnerSelectedItem = MutableLiveData<BindableSpinnerAdapter.SpinnerItem>()
     val rightSpinnerSkipped = MutableLiveData(false)
+    val rightSpinnerFirstItemSelected = MutableLiveData(false)
 
     val clearing = MutableLiveData(false)
 
@@ -59,12 +58,15 @@ class NumberCalculatorViewModel: ViewModel() {
         }
     }
 
+    private fun isRightSpinnerFirstItemSelected(): Boolean {
+        return rightSpinnerSelectedItem.value == rightSpinnerItemList.first()
+    }
+
     private fun convert(calculationLine: CalculationLine?) {
-        val a = "0.09290304"
         calculationLine?.let { calculationLine ->
             if (calculationLine.operand.isNotEmpty()) {
                 getSelectedSpinnerItems { leftSpinnerItem, rightSpinnerItem ->
-                    if (leftSpinnerItem.type == rightSpinnerItem.type) {
+                    if (leftSpinnerItem.type == rightSpinnerItem.type && !isRightSpinnerFirstItemSelected()) {
                         calculationLine.convertedValue = rightSpinnerItem.decode(leftSpinnerItem.encode(calculationLine.operand))
                     } else {
                         calculationLine.convertedValue = null
@@ -74,19 +76,25 @@ class NumberCalculatorViewModel: ViewModel() {
         }
     }
 
-    fun leftSpinner() {
-        if (leftSpinnerSkipped.value == true) {
-            return
-        }
+    private fun resetRightSpinnerIfNeeded() {
         getSelectedSpinnerItems { selectedLeftSpinnerItem, selectedRightSpinnerItem ->
             if (selectedLeftSpinnerItem.type != selectedRightSpinnerItem.type) {
+                rightSpinnerFirstItemSelected.value = isRightSpinnerFirstItemSelected()
                 rightSpinnerSkipped.value = true
                 rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
                 Handler(Looper.getMainLooper()).postDelayed({
                     rightSpinnerSkipped.value = false
+                    rightSpinnerFirstItemSelected.value = false
                 }, 100)
             }
         }
+    }
+
+    fun leftSpinner() {
+        if (leftSpinnerSkipped.value == true) {
+            return
+        }
+        resetRightSpinnerIfNeeded()
         for (calculationLine in calculationLines) {
             convert(calculationLine)
         }
@@ -97,20 +105,7 @@ class NumberCalculatorViewModel: ViewModel() {
         if (rightSpinnerSkipped.value == true) {
             return
         }
-        getSelectedSpinnerItems { selectedLeftSpinnerItem, selectedRightSpinnerItem ->
-            if (selectedLeftSpinnerItem.type != selectedRightSpinnerItem.type) {
-                rightSpinnerSkipped.value = true
-                rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
-                Handler(Looper.getMainLooper()).postDelayed({
-                    rightSpinnerSkipped.value = false
-                }, 100)
-//                leftSpinnerSkipped = true
-//                leftSpinnerSelectedItem.value = numberSpinnerItemList.first()
-//                Handler(Looper.getMainLooper()).postDelayed({
-//                    leftSpinnerSkipped = false
-//                }, 100)
-            }
-        }
+        resetRightSpinnerIfNeeded()
         for (calculationLine in calculationLines) {
             convert(calculationLine)
         }
@@ -248,5 +243,9 @@ class NumberCalculatorViewModel: ViewModel() {
         }
         convert(current)
         lines.postValue(calculationLines)
+    }
+
+    fun shouldShowErrorMessage(spinnerSkipped: Boolean): Boolean {
+        return spinnerSkipped && clearing.value == false && rightSpinnerFirstItemSelected.value == false
     }
 }

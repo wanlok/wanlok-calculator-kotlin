@@ -21,9 +21,6 @@ import com.wanlok.calculator.databinding.FragmentCalculatorBinding
 class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
     private val viewModel: NumberCalculatorViewModel by viewModels()
 
-    private lateinit var leftSpinner: Spinner
-    private lateinit var rightSpinner: Spinner
-
     private lateinit var calculationRecyclerView: RecyclerView
 
     private lateinit var zeroButton: CalculatorButton
@@ -168,17 +165,15 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
             viewModel.rightSpinner()
         }
 
-        val errorMessage = "Invalid Conversion"
-
         viewModel.leftSpinnerSkipped.observe(viewLifecycleOwner) {
-            if (it && viewModel.clearing.value == false) {
-                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            if (viewModel.shouldShowErrorMessage(it)) {
+                Toast.makeText(context, getString(R.string.invalid_conversion), Toast.LENGTH_LONG).show()
             }
         }
 
         viewModel.rightSpinnerSkipped.observe(viewLifecycleOwner) {
-            if (it && viewModel.clearing.value == false) {
-                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            if (viewModel.shouldShowErrorMessage(it)) {
+                Toast.makeText(context, getString(R.string.invalid_conversion), Toast.LENGTH_LONG).show()
             }
         }
 
