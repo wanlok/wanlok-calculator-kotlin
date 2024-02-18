@@ -184,7 +184,9 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         viewModel.lines.observe(viewLifecycleOwner) { lines ->
             val adapter = calculationRecyclerView.adapter as ExampleAdapter
             adapter.updateList(lines)
-            calculationRecyclerView.scrollToPosition(adapter.itemCount - 1)
+            if (viewModel.shouldScrollToBottom()) {
+                calculationRecyclerView.scrollToPosition(adapter.itemCount - 1)
+            }
         }
 
         return view

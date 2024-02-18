@@ -43,6 +43,7 @@ class NumberCalculatorViewModel: ViewModel() {
     val rightSpinnerSkipped = MutableLiveData(false)
     val rightSpinnerFirstItemSelected = MutableLiveData(false)
 
+    val removing = MutableLiveData(false)
     val clearing = MutableLiveData(false)
 
     val lines = MutableLiveData<ArrayList<CalculationLine>>()
@@ -214,17 +215,8 @@ class NumberCalculatorViewModel: ViewModel() {
         lines.postValue(calculationLines)
     }
 
-    fun clear() {
-        clearing.value = true
-        leftSpinnerSelectedItem.value = leftSpinnerItemList.first()
-        rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
-        calculationLines.clear()
-        calculationLines.add(CalculationLine(0, 0, null, "", "0", null, true))
-        lines.postValue(calculationLines)
-        clearing.value = false
-    }
-
     fun remove(index: Int) {
+        removing.value = true
         calculationLines.removeAt(index)
         if (calculationLines.size == 0) {
             calculationLines.add(CalculationLine(0, 0, null, "", "0", null, true))
@@ -246,9 +238,26 @@ class NumberCalculatorViewModel: ViewModel() {
         }
         convert(current)
         lines.postValue(calculationLines)
+        Handler(Looper.getMainLooper()).postDelayed({
+            removing.value = false
+        }, 100)
+    }
+
+    fun clear() {
+        clearing.value = true
+        leftSpinnerSelectedItem.value = leftSpinnerItemList.first()
+        rightSpinnerSelectedItem.value = rightSpinnerItemList.first()
+        calculationLines.clear()
+        calculationLines.add(CalculationLine(0, 0, null, "", "0", null, true))
+        lines.postValue(calculationLines)
+        clearing.value = false
     }
 
     fun shouldShowErrorMessage(spinnerSkipped: Boolean): Boolean {
         return spinnerSkipped && clearing.value == false && rightSpinnerFirstItemSelected.value == false
+    }
+
+    fun shouldScrollToBottom(): Boolean {
+        return removing.value == false
     }
 }
