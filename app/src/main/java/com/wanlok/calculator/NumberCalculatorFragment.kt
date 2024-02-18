@@ -1,7 +1,6 @@
 package com.wanlok.calculator
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -62,38 +61,38 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
                 break
             }
         }
-        value?.let { viewModel.text(it) }
+        viewModel.text(value)
     }
 
-    private fun onDecimalButtonClick(view: View) {
+    private fun onDecimalButtonClick() {
         viewModel.decimal()
     }
 
-    private fun onAddButtonClick(view: View) {
+    private fun onAddButtonClick() {
         viewModel.operator("+")
     }
 
-    private fun onMinusButtonClick(view: View) {
+    private fun onMinusButtonClick() {
         viewModel.operator("-")
     }
 
-    private fun onMultiplyButtonClick(view: View) {
+    private fun onMultiplyButtonClick() {
         viewModel.operator("×")
     }
 
-    private fun onDivideButtonClick(view: View) {
+    private fun onDivideButtonClick() {
         viewModel.operator("÷")
     }
 
-    private fun onEqualButtonClick(view: View) {
+    private fun onEqualButtonClick() {
         viewModel.equal()
     }
 
-    private fun onBackspaceButtonClick(view: View) {
+    private fun onBackspaceButtonClick() {
         viewModel.backspace()
     }
 
-    private fun onClearButtonClick(view: View) {
+    private fun onClearButtonClick() {
         viewModel.clear()
     }
 
@@ -101,8 +100,8 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         viewModel.remove(position)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true);
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        setHasOptionsMenu(true)
 
         val binding = DataBindingUtil.inflate<FragmentCalculatorBinding>(inflater, R.layout.fragment_calculator, container, false)
         binding.viewModel = viewModel
@@ -113,7 +112,7 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         calculationRecyclerView = view.findViewById(R.id.calculationRecyclerView)
         calculationRecyclerView.layoutManager = LinearLayoutManager(activity)
         calculationRecyclerView.setPadding(0, Utils.dp(8, context), 0, Utils.dp(8, context))
-        calculationRecyclerView.clipToPadding = false;
+        calculationRecyclerView.clipToPadding = false
         calculationRecyclerView.adapter = ExampleAdapter(emptyList())
 
         context?.let { context ->
@@ -139,28 +138,28 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         }
 
         decimalButton = view.findViewById(R.id.decimalButton)
-        decimalButton.setOnClickListener { onDecimalButtonClick(it) }
+        decimalButton.setOnClickListener { onDecimalButtonClick() }
 
         addButton = view.findViewById(R.id.addButton)
-        addButton.setOnClickListener { onAddButtonClick(it) }
+        addButton.setOnClickListener { onAddButtonClick() }
 
         minusButton = view.findViewById(R.id.minusButton)
-        minusButton.setOnClickListener { onMinusButtonClick(it) }
+        minusButton.setOnClickListener { onMinusButtonClick() }
 
         multiplyButton = view.findViewById(R.id.multiplyButton)
-        multiplyButton.setOnClickListener { onMultiplyButtonClick(it) }
+        multiplyButton.setOnClickListener { onMultiplyButtonClick() }
 
         divideButton = view.findViewById(R.id.divideButton)
-        divideButton.setOnClickListener { onDivideButtonClick(it) }
+        divideButton.setOnClickListener { onDivideButtonClick() }
 
         equalButton = view.findViewById(R.id.equalButton)
-        equalButton.setOnClickListener { onEqualButtonClick(it) }
+        equalButton.setOnClickListener { onEqualButtonClick() }
 
         backspaceButton = view.findViewById(R.id.backspaceButton)
-        backspaceButton.setOnClickListener { onBackspaceButtonClick(it) }
+        backspaceButton.setOnClickListener { onBackspaceButtonClick() }
 
         clearButton = view.findViewById(R.id.clearButton)
-        clearButton.setOnClickListener { onClearButtonClick(it) }
+        clearButton.setOnClickListener { onClearButtonClick() }
 
         viewModel.leftSpinnerSelectedItem.observe(viewLifecycleOwner) {
             viewModel.leftSpinner()
@@ -185,7 +184,7 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         viewModel.lines.observe(viewLifecycleOwner) { lines ->
             val adapter = calculationRecyclerView.adapter as ExampleAdapter
             adapter.updateList(lines)
-            calculationRecyclerView.scrollToPosition(adapter.itemCount - 1);
+            calculationRecyclerView.scrollToPosition(adapter.itemCount - 1)
         }
 
         return view
@@ -198,14 +197,9 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.item_filter ->            {
-
-                // Do onlick on menu action here
-                Log.d("ROBERT", "item_filter found")
-                view?.let {
-                    open(A1Fragment(), it)
-                }
-
+            R.id.item_filter -> {
+                open(A1Fragment())
+                return true
             }
         }
         return false
