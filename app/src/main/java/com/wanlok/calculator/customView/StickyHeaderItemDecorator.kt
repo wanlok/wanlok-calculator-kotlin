@@ -1,25 +1,38 @@
 package com.wanlok.calculator.customView
 
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.wanlok.calculator.R
 
 class StickyHeaderItemDecorator {
 
     private lateinit var listener: StickyHeaderInterface
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: ListRecyclerAdapter
+    private lateinit var adapter: StickyHeaderRecyclerViewAdapter
     private val currentHeaderViewMap: MutableMap<Int, Boolean> by lazy { mutableMapOf() }
     private var stickyHeaderContainer: LinearLayout? = null
+
+    companion object {
+        fun build(recyclerView: RecyclerView, stickyHeaderItemDecorator: StickyHeaderItemDecorator?): StickyHeaderItemDecorator {
+            stickyHeaderItemDecorator?.clearReferences()
+//            stickyHeaderItemDecorator = null
+            val stickyHeaderItemDecorator = StickyHeaderItemDecorator()
+            val adapter = recyclerView.adapter
+            if (adapter is StickyHeaderRecyclerViewAdapter) {
+                stickyHeaderItemDecorator?.attachRecyclerView(adapter, recyclerView, adapter)
+            }
+            return stickyHeaderItemDecorator
+        }
+    }
 
     fun attachRecyclerView(
         listener: StickyHeaderInterface,
         recyclerView: RecyclerView,
-        adapter: ListRecyclerAdapter
+        adapter: StickyHeaderRecyclerViewAdapter
     ) {
         this.listener = listener
         this.recyclerView = recyclerView
@@ -142,6 +155,6 @@ class StickyHeaderItemDecorator {
     }
 
     interface StickyHeaderInterface {
-        fun isHeader(itemPosition: Int): Boolean
+        fun isHeader(position: Int): Boolean
     }
 }
