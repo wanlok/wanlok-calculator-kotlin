@@ -36,7 +36,8 @@ class SeparatorItemDecoration(var context: Context, private val separatorHeight:
                 val params = child.layoutParams as RecyclerView.LayoutParams
                 val top = child.bottom + params.bottomMargin
                 val bottom = top + separatorHeight
-                c.drawLine(left.toFloat() + Utils.dp(48, context), top.toFloat(), right.toFloat(), bottom.toFloat(), separatorPaint)
+                val checkboxWidth = context.resources.getDimension(R.dimen.checkbox_width).toInt()
+                c.drawLine(left.toFloat() + checkboxWidth, top.toFloat(), right.toFloat(), bottom.toFloat(), separatorPaint)
             }
         }
     }

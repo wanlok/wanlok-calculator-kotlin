@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="calculator_operator_width">48dp</dimen>
+    <dimen name="checkbox_width">56dp</dimen>
+    <dimen name="calculator_text_size_small">16sp</dimen>
     <dimen name="calculator_text_size">20sp</dimen>
+    <dimen name="calculator_view_height_small">40dp</dimen>
     <dimen name="calculator_view_height">56dp</dimen>
+    <dimen name="calculator_view_height_big">72dp</dimen>
     <dimen name="bottom_navigation_view_height">56dp</dimen>
     <dimen name="separator_height">1dp</dimen>
 </resources>

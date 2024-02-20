@@ -15,7 +15,7 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:layout_width="@dimen/calculator_operator_width"
+                android:layout_width="@dimen/checkbox_width"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:clickable="false"
