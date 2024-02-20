@@ -16,6 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_alignParentTop="true"
+            android:layout_above="@id/separatorView1" />
+
+        <View
+            android:id="@+id/separatorView1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_1"
             android:layout_alignParentBottom="true" />
     </RelativeLayout>
 </layout>

@@ -15,7 +15,7 @@ class SeparatorItemDecoration(var context: Context, private val separatorHeight:
     private val separatorPaint: Paint = Paint()
 
     init {
-        separatorPaint.color = ContextCompat.getColor(context, R.color.gray_2)
+        separatorPaint.color = ContextCompat.getColor(context, R.color.gray_1)
         separatorPaint.strokeWidth = separatorHeight.toFloat()
     }
 
