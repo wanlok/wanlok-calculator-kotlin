@@ -49,9 +49,7 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
 
     private lateinit var itemTouchHelper: ItemTouchHelper
 
-    override fun getTitle(): String {
-        return "Number Calculator"
-    }
+    override fun getTitle(): String = "Number Calculator"
 
     private fun onNumberButtonClick(view: View) {
         var value = ""
@@ -200,7 +198,7 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.item_filter -> {
-                open(ConversionListFragment())
+                open(ConversionFragment())
                 return true
             }
         }

@@ -4,4 +4,5 @@
     <dimen name="calculator_text_size">20sp</dimen>
     <dimen name="calculator_view_height">56dp</dimen>
     <dimen name="bottom_navigation_view_height">56dp</dimen>
+    <dimen name="separator_height">1dp</dimen>
 </resources>

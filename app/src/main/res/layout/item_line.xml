@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <import type="android.view.View" />
         <variable name="itemLine" type="com.wanlok.calculator.model.ItemLine" />
     </data>
     <LinearLayout
@@ -11,18 +12,41 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/calculator_view_height"
-            android:orientation="horizontal"
-            android:background="@color/gray_1">
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:layout_width="@dimen/calculator_operator_width"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:clickable="false"
+                android:background="@android:color/transparent"
+                android:textSize="@dimen/calculator_text_size"
+                android:textColor="@color/black"
+                android:checked="@{itemLine.selected}" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.5"
                 android:layout_gravity="center_vertical"
                 android:textSize="@dimen/calculator_text_size"
                 android:textColor="@color/black"
-                android:paddingLeft="16dp"
+                android:text="@{itemLine.leftText}" />
+
+            <View
+                android:layout_width="16dp"
+                android:layout_height="match_parent" />
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/calculator_text_size"
+                android:textColor="@color/black"
                 android:paddingRight="16dp"
-                android:text="@{itemLine.text}" />
+                android:text="@{itemLine.rightText}"
+                android:visibility="@{itemLine.rightText == null ? View.GONE : View.VISIBLE}" />
         </LinearLayout>
     </LinearLayout>
 </layout>
