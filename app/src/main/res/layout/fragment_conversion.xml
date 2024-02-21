@@ -34,21 +34,14 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
-                <Button
-                    android:id="@+id/titleButton"
+                <TextView
+                    android:id="@+id/titleTextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    android:padding="0dp"
+                    android:gravity="center_vertical"
                     android:textSize="@dimen/calculator_text_size"
                     android:textColor="@color/black"
                     android:textStyle="bold"
-                    android:textAlignment="textStart"
-                    android:textAllCaps="false"
-                    android:letterSpacing="0"
-                    android:backgroundTint="@color/white"
-                    app:cornerRadius="0dp"
                     android:text="Unit" />
             </LinearLayout>
 

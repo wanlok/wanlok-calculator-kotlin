@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -26,7 +28,7 @@ class ConversionFragment : NavigationFragment() {
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private lateinit var titleCheckBox: CheckBox
-    private lateinit var titleButton: Button
+    private lateinit var titleTextView: TextView
     private lateinit var recyclerView: RecyclerView
 
     private var stickyHeaderItemDecorator: StickyHeaderItemDecorator? = null
@@ -34,14 +36,19 @@ class ConversionFragment : NavigationFragment() {
     override fun getTitle(): String = "Conversion"
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val binding: FragmentConversionBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_conversion, container, false)
+        setHasOptionsMenu(true)
+
+        val binding = DataBindingUtil.inflate<FragmentConversionBinding>(inflater, R.layout.fragment_conversion, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
         val view = binding.root
+
         parentView = view.findViewById(R.id.parentView)
         titleCheckBox = view.findViewById(R.id.titleCheckBox)
-        titleButton = view.findViewById(R.id.titleButton)
+        titleTextView = view.findViewById(R.id.titleTextView)
         recyclerView = view.findViewById(R.id.recyclerView)
+
         return view
     }
 
@@ -55,7 +62,7 @@ class ConversionFragment : NavigationFragment() {
             }
         }
 
-        titleButton.setOnClickListener {
+        titleTextView.setOnClickListener {
             titleCheckBox.performClick()
         }
 
@@ -140,5 +147,9 @@ class ConversionFragment : NavigationFragment() {
                 binding.executePendingBindings()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
     }
 }
