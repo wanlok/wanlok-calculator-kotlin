@@ -10,32 +10,57 @@ import com.wanlok.calculator.model.ItemLine
 class ConversionViewModel: ViewModel() {
     var itemLineList: List<ItemLine> = emptyList()
     val itemLineListLiveData = MutableLiveData(itemLineList)
+    val allCheckedLiveData = MutableLiveData(false)
+    val manuallyCheckedLiveData = MutableLiveData(false)
 
     fun setup(conversions: List<Conversion>?, conversionLines: List<ConversionLine>?) {
         conversions?.let { conversions ->
             conversionLines?.let { conversionLines ->
-                val itemLines = ArrayList<ItemLine>()
+                val itemLineList = ArrayList<ItemLine>()
                 for (conversion in conversions) {
-                    itemLines.add(ItemHeader(conversion.text))
+                    itemLineList.add(ItemHeader(conversion.text))
                     for (conversionLine in conversionLines) {
                         if (conversion.type == conversionLine.type) {
-                            itemLines.add(ItemLine(conversionLine.text, conversionLine.selected, conversionLine))
+                            itemLineList.add(ItemLine(conversionLine.text, conversionLine.selected, conversionLine))
                         }
                     }
                 }
-                this.itemLineList = itemLines
-                itemLineListLiveData.value = itemLines
+                this.itemLineList = itemLineList
+                itemLineListLiveData.postValue(itemLineList)
             }
         }
     }
 
-    fun setItemLineSelected(position: Int) {
-       itemLineList[position]?.let { itemLine ->
+    fun isAllChecked(): Boolean {
+        var allChecked = true
+        for (position in itemLineList.indices) {
+            if ((itemLineList[position].data as? ConversionLine)?.selected == false) {
+                allChecked = false
+                break
+            }
+        }
+        return allChecked
+    }
+
+    fun check(position: Int) {
+        itemLineList[position].let { itemLine ->
             itemLine.selected?.let { selected ->
                 (itemLine.data as ConversionLine).selected = !selected
                 itemLine.selected = !selected
             }
         }
         itemLineListLiveData.postValue(itemLineList)
+    }
+
+    fun checkAll(selected: Boolean) {
+        if (manuallyCheckedLiveData.value == true) {
+            for (position in itemLineList.indices) {
+                itemLineList[position].let { itemLine ->
+                    (itemLine.data as? ConversionLine)?.selected = selected
+                    itemLine.selected = selected
+                }
+            }
+            itemLineListLiveData.postValue(itemLineList)
+        }
     }
 }

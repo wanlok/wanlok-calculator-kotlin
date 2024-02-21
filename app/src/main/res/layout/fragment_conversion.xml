@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable name="viewModel" type="com.wanlok.calculator.ConversionViewModel" />
     </data>
 
     <RelativeLayout
-        android:id="@+id/parentLayout"
+        android:id="@+id/parentView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -19,37 +19,42 @@
             android:orientation="horizontal">
 
             <CheckBox
+                android:id="@+id/titleCheckBox"
                 android:layout_width="@dimen/checkbox_width"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:background="@android:color/transparent"
                 style="@style/GreenCheckboxStyle"
                 android:textSize="@dimen/calculator_text_size"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:checked="@{viewModel.allCheckedLiveData}" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5">
+                android:layout_weight="1">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                <Button
+                    android:id="@+id/titleButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:padding="0dp"
                     android:textSize="@dimen/calculator_text_size"
                     android:textColor="@color/black"
                     android:textStyle="bold"
+                    android:textAlignment="textStart"
+                    android:textAllCaps="false"
+                    android:letterSpacing="0"
+                    android:backgroundTint="@color/white"
+                    app:cornerRadius="0dp"
                     android:text="Unit" />
             </LinearLayout>
 
-            <View
-                android:layout_width="16dp"
-                android:layout_height="match_parent" />
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
                 android:orientation="vertical"
                 android:padding="16dp">
 
