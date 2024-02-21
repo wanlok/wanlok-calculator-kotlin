@@ -53,10 +53,10 @@ class NumberCalculatorViewModel: ViewModel() {
         rightSpinnerSelectedItemLiveData.postValue(rightSpinnerItemList?.first())
     }
 
-    private fun getSelectedSpinnerItems(callback: (BindableSpinnerAdapter.SpinnerItem, BindableSpinnerAdapter.SpinnerItem) -> Unit) {
-        leftSpinnerSelectedItemLiveData.value?.let { leftSpinnerItem ->
-            rightSpinnerSelectedItemLiveData.value?.let { rightSpinnerItem ->
-                callback(leftSpinnerItem, rightSpinnerItem)
+    private fun getSpinnerSelectedItems(callback: (BindableSpinnerAdapter.SpinnerItem, BindableSpinnerAdapter.SpinnerItem) -> Unit) {
+        leftSpinnerSelectedItemLiveData.value?.let { leftSpinnerSelectedItem ->
+            rightSpinnerSelectedItemLiveData.value?.let { rightSpinnerSelectedItem ->
+                callback(leftSpinnerSelectedItem, rightSpinnerSelectedItem)
             }
         }
     }
@@ -68,9 +68,9 @@ class NumberCalculatorViewModel: ViewModel() {
     private fun convert(calculationLine: CalculationLine?) {
         calculationLine?.let { calculationLine ->
             if (calculationLine.operand.isNotEmpty()) {
-                getSelectedSpinnerItems { leftSpinnerItem, rightSpinnerItem ->
-                    val leftConversionLine = leftSpinnerItem.data as ConversionLine
-                    val rightConversionLine = rightSpinnerItem.data as ConversionLine
+                getSpinnerSelectedItems { leftSpinnerSelectedItem, rightSpinnerSelectedItem ->
+                    val leftConversionLine = leftSpinnerSelectedItem.data as ConversionLine
+                    val rightConversionLine = rightSpinnerSelectedItem.data as ConversionLine
                     if (leftConversionLine.type == rightConversionLine.type && !isRightSpinnerFirstItemSelected()) {
                         calculationLine.convertedValue = rightConversionLine.decode(leftConversionLine.encode(calculationLine.operand))
                     } else {
@@ -82,9 +82,9 @@ class NumberCalculatorViewModel: ViewModel() {
     }
 
     private fun resetRightSpinnerIfNeeded() {
-        getSelectedSpinnerItems { selectedLeftSpinnerItem, selectedRightSpinnerItem ->
-            val from = selectedLeftSpinnerItem.data as ConversionLine
-            val to = selectedRightSpinnerItem.data as ConversionLine
+        getSpinnerSelectedItems { leftSpinnerSelectedItem, rightSpinnerSelectedItem ->
+            val from = leftSpinnerSelectedItem.data as ConversionLine
+            val to = rightSpinnerSelectedItem.data as ConversionLine
             if (from.type != to.type) {
                 rightSpinnerSkippedLiveData.postValue(true)
                 rightSpinnerSelectedItemLiveData.postValue(rightSpinnerItemListLiveData.value?.first())

@@ -23,7 +23,7 @@ class ExampleAdapter(private var calculationLines: List<CalculationLine>): Recyc
         return calculationLines.size
     }
 
-    fun updateList(calculationLines: List<CalculationLine>) {
+    fun update(calculationLines: List<CalculationLine>) {
         this.calculationLines = calculationLines
         notifyDataSetChanged()
     }
