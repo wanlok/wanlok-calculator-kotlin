@@ -57,8 +57,8 @@
                     android:spinnerMode="dropdown"
                     android:textSize="@dimen/calculator_text_size"
                     android:paddingLeft="8dp"
-                    spinnerItems="@{viewModel.leftSpinnerListLiveData}"
-                    selectedSpinnerItem="@={viewModel.leftSpinnerSelectedLiveData}" />
+                    spinnerItems="@{viewModel.leftSpinnerItemListLiveData}"
+                    selectedSpinnerItem="@={viewModel.leftSpinnerSelectedItemLiveData}" />
 
                 <View
                     android:layout_width="match_parent"
@@ -81,8 +81,8 @@
                     android:spinnerMode="dropdown"
                     android:textSize="@dimen/calculator_text_size"
                     android:paddingLeft="8dp"
-                    spinnerItems="@{viewModel.rightSpinnerListLiveData}"
-                    selectedSpinnerItem="@={viewModel.rightSpinnerSelectedItem}" />
+                    spinnerItems="@{viewModel.rightSpinnerItemListLiveData}"
+                    selectedSpinnerItem="@={viewModel.rightSpinnerSelectedItemLiveData}" />
 
                 <View
                     android:layout_width="match_parent"

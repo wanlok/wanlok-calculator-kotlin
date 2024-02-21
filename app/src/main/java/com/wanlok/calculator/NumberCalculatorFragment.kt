@@ -1,7 +1,6 @@
 package com.wanlok.calculator
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -169,11 +168,11 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         clearButton = view.findViewById(R.id.clearButton)
         clearButton.setOnClickListener { onClearButtonClick() }
 
-        viewModel.leftSpinnerSelectedLiveData.observe(viewLifecycleOwner) {
+        viewModel.leftSpinnerSelectedItemLiveData.observe(viewLifecycleOwner) {
             viewModel.leftSpinner()
         }
 
-        viewModel.rightSpinnerSelectedItem.observe(viewLifecycleOwner) {
+        viewModel.rightSpinnerSelectedItemLiveData.observe(viewLifecycleOwner) {
             viewModel.rightSpinner()
         }
 
@@ -183,13 +182,13 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
             }
         }
 
-        viewModel.rightSpinnerSkipped.observe(viewLifecycleOwner) {
+        viewModel.rightSpinnerSkippedLiveData.observe(viewLifecycleOwner) {
             if (viewModel.shouldShowErrorMessage(it)) {
                 Toast.makeText(context, getString(R.string.invalid_conversion), Toast.LENGTH_LONG).show()
             }
         }
 
-        viewModel.lines.observe(viewLifecycleOwner) { lines ->
+        viewModel.calculationLineListLiveData.observe(viewLifecycleOwner) { lines ->
             val adapter = calculationRecyclerView.adapter as ExampleAdapter
             adapter.updateList(lines)
             if (viewModel.shouldScrollToBottom()) {
@@ -209,8 +208,8 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
                 sharedViewModel.rightFirstConversionLine,
                 conversionLines
             )
-            (leftSpinner.adapter as? BindableSpinnerAdapter)?.update(viewModel.leftSpinnerItems)
-            (rightSpinner.adapter as? BindableSpinnerAdapter)?.update(viewModel.rightSpinnerItems)
+            (leftSpinner.adapter as? BindableSpinnerAdapter)?.update(viewModel.leftSpinnerItemList)
+            (rightSpinner.adapter as? BindableSpinnerAdapter)?.update(viewModel.rightSpinnerItemList)
         }
 
         return view
