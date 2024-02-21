@@ -2,6 +2,7 @@ package com.wanlok.calculator
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.wanlok.calculator.Utils.divide
@@ -47,10 +48,8 @@ class NumberCalculatorViewModel: ViewModel() {
     fun setup(leftFirstConversionLine: ConversionLine, rightFirstConversionLine: ConversionLine, conversionLines: List<ConversionLine>?) {
         leftSpinnerItemList = combine(leftFirstConversionLine, conversionLines)
         leftSpinnerItemListLiveData.postValue(leftSpinnerItemList)
-        leftSpinnerSelectedItemLiveData.postValue(leftSpinnerItemList?.first())
         rightSpinnerItemList = combine(rightFirstConversionLine, conversionLines)
         rightSpinnerItemListLiveData.postValue(rightSpinnerItemList)
-        rightSpinnerSelectedItemLiveData.postValue(rightSpinnerItemList?.first())
     }
 
     private fun getSpinnerSelectedItems(callback: (BindableSpinnerAdapter.SpinnerItem, BindableSpinnerAdapter.SpinnerItem) -> Unit) {

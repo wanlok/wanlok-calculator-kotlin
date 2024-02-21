@@ -53,10 +53,8 @@
                 <Spinner
                     android:id="@+id/leftSpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="@dimen/calculator_view_height"
                     android:spinnerMode="dropdown"
-                    android:textSize="@dimen/calculator_text_size"
-                    android:paddingLeft="8dp"
                     spinnerItems="@{viewModel.leftSpinnerItemListLiveData}"
                     selectedSpinnerItem="@={viewModel.leftSpinnerSelectedItemLiveData}" />
 
@@ -77,10 +75,8 @@
                 <Spinner
                     android:id="@+id/rightSpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="@dimen/calculator_view_height"
                     android:spinnerMode="dropdown"
-                    android:textSize="@dimen/calculator_text_size"
-                    android:paddingLeft="8dp"
                     spinnerItems="@{viewModel.rightSpinnerItemListLiveData}"
                     selectedSpinnerItem="@={viewModel.rightSpinnerSelectedItemLiveData}" />
 

@@ -208,11 +208,23 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
                 sharedViewModel.rightFirstConversionLine,
                 conversionLines
             )
-            (leftSpinner.adapter as? BindableSpinnerAdapter)?.update(viewModel.leftSpinnerItemList)
-            (rightSpinner.adapter as? BindableSpinnerAdapter)?.update(viewModel.rightSpinnerItemList)
+            updateConversion(leftSpinner, viewModel.leftSpinnerItemList, viewModel.leftSpinnerSelectedItemLiveData.value)
+            updateConversion(rightSpinner, viewModel.rightSpinnerItemList, viewModel.rightSpinnerSelectedItemLiveData.value)
         }
 
         return view
+    }
+
+    private fun updateConversion(spinner: Spinner, list: List<BindableSpinnerAdapter.SpinnerItem>, selectedItem: BindableSpinnerAdapter.SpinnerItem?) {
+        var position = 0
+        for (i in list.indices) {
+            if (list[i] == selectedItem) {
+                position = i
+                break
+            }
+        }
+        (spinner.adapter as? BindableSpinnerAdapter)?.update(list)
+        spinner.setSelection(position)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
