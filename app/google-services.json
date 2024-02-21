@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "23515284148",
+    "project_id": "wanlok-calculator",
+    "storage_bucket": "wanlok-calculator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23515284148:android:6df2ffff1113f69e954de1",
+        "android_client_info": {
+          "package_name": "com.wanlok.calculator"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDODKFkQVHhdlcAwoD2g3sruvlReuHVzKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
