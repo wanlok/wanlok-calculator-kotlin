@@ -1,27 +1,34 @@
 package com.wanlok.calculator
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.wanlok.calculator.customView.BindableSpinnerAdapter
 import com.wanlok.calculator.customView.CalculatorButton
 import com.wanlok.calculator.customView.ExampleAdapter
 import com.wanlok.calculator.customView.SwipeListener
 import com.wanlok.calculator.customView.SwipeSimpleCallback
 import com.wanlok.calculator.databinding.FragmentCalculatorBinding
 
-
 class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
     private val viewModel: NumberCalculatorViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
+
+    private lateinit var leftSpinner: Spinner
+    private lateinit var rightSpinner: Spinner
 
     private lateinit var calculationRecyclerView: RecyclerView
 
@@ -107,6 +114,9 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
 
         val view = binding.root
 
+        leftSpinner = view.findViewById(R.id.leftSpinner)
+        rightSpinner = view.findViewById(R.id.rightSpinner)
+
         calculationRecyclerView = view.findViewById(R.id.calculationRecyclerView)
         calculationRecyclerView.layoutManager = LinearLayoutManager(activity)
         calculationRecyclerView.setPadding(0, Utils.dp(8, context), 0, Utils.dp(8, context))
@@ -159,7 +169,7 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         clearButton = view.findViewById(R.id.clearButton)
         clearButton.setOnClickListener { onClearButtonClick() }
 
-        viewModel.leftSpinnerSelectedItem.observe(viewLifecycleOwner) {
+        viewModel.leftSpinnerSelectedLiveData.observe(viewLifecycleOwner) {
             viewModel.leftSpinner()
         }
 
@@ -167,7 +177,7 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
             viewModel.rightSpinner()
         }
 
-        viewModel.leftSpinnerSkipped.observe(viewLifecycleOwner) {
+        viewModel.leftSpinnerSkippedLiveData.observe(viewLifecycleOwner) {
             if (viewModel.shouldShowErrorMessage(it)) {
                 Toast.makeText(context, getString(R.string.invalid_conversion), Toast.LENGTH_LONG).show()
             }
@@ -185,6 +195,22 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
             if (viewModel.shouldScrollToBottom()) {
                 calculationRecyclerView.scrollToPosition(adapter.itemCount - 1)
             }
+        }
+
+        viewModel.setup(
+            sharedViewModel.leftFirstConversionLine,
+            sharedViewModel.rightFirstConversionLine,
+            sharedViewModel.conversionLineLiveData.value
+        )
+
+        sharedViewModel.conversionLineLiveData.observe(viewLifecycleOwner) { conversionLines ->
+            viewModel.setup(
+                sharedViewModel.leftFirstConversionLine,
+                sharedViewModel.rightFirstConversionLine,
+                conversionLines
+            )
+            (leftSpinner.adapter as? BindableSpinnerAdapter)?.update(viewModel.leftSpinnerItems)
+            (rightSpinner.adapter as? BindableSpinnerAdapter)?.update(viewModel.rightSpinnerItems)
         }
 
         return view

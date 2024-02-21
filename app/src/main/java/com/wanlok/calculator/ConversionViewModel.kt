@@ -1,35 +1,41 @@
 package com.wanlok.calculator
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.wanlok.calculator.model.Conversion
+import com.wanlok.calculator.model.ConversionLine
 import com.wanlok.calculator.model.ItemHeader
 import com.wanlok.calculator.model.ItemLine
 
 class ConversionViewModel: ViewModel() {
-    val lll = arrayListOf(
-        ItemHeader("Length"),
-        ItemLine("cm"),
-        ItemLine("m"),
-        ItemLine("ft"),
-        ItemHeader("Area"),
-        ItemLine("m²"),
-        ItemLine("ft²"),
-        ItemHeader("Currency"),
-        ItemLine("HKD"),
-        ItemLine("AUD"),
-        ItemLine("USD"),
-    )
+    var itemLineList: List<ItemLine> = emptyList()
+    val itemLineListLiveData = MutableLiveData(itemLineList)
 
-    val itemLines = MutableLiveData(lll)
-
-    fun dummy(position: Int) {
-//        Handler(Looper.getMainLooper()).postDelayed({
-            lll[position].selected?.let { selected ->
-                lll[position].selected = !selected
+    fun setup(conversions: List<Conversion>?, conversionLines: List<ConversionLine>?) {
+        conversions?.let { conversions ->
+            conversionLines?.let { conversionLines ->
+                val itemLines = ArrayList<ItemLine>()
+                for (conversion in conversions) {
+                    itemLines.add(ItemHeader(conversion.text))
+                    for (conversionLine in conversionLines) {
+                        if (conversion.type == conversionLine.type) {
+                            itemLines.add(ItemLine(conversionLine.text, conversionLine.selected, conversionLine))
+                        }
+                    }
+                }
+                this.itemLineList = itemLines
+                itemLineListLiveData.value = itemLines
             }
-            itemLines.postValue(lll)
-//        }, 400)
+        }
+    }
+
+    fun setItemLineSelected(position: Int) {
+       itemLineList[position]?.let { itemLine ->
+            itemLine.selected?.let { selected ->
+                (itemLine.data as ConversionLine).selected = !selected
+                itemLine.selected = !selected
+            }
+        }
+        itemLineListLiveData.postValue(itemLineList)
     }
 }

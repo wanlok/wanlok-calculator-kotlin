@@ -1,11 +1,11 @@
 package com.wanlok.calculator
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,12 +15,11 @@ import com.wanlok.calculator.customView.StickyHeaderRecyclerViewAdapter
 import com.wanlok.calculator.databinding.FragmentCalculatorFilterListBinding
 import com.wanlok.calculator.databinding.ItemHeaderBinding
 import com.wanlok.calculator.databinding.ItemLineBinding
-import com.wanlok.calculator.model.CalculationLine
-import com.wanlok.calculator.model.ItemHeader
 import com.wanlok.calculator.model.ItemLine
 
 class ConversionFragment : NavigationFragment() {
     private val viewModel: ConversionViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private lateinit var recyclerView: RecyclerView
 
@@ -49,16 +48,20 @@ class ConversionFragment : NavigationFragment() {
             recyclerView.addItemDecoration(separatorItemDecoration)
         }
 
-        viewModel.itemLines.value?.let { itemLines ->
-            recyclerView.adapter = ConversionRecyclerViewAdapter(itemLines) { position ->
-                viewModel.dummy(position)
-            }
+        viewModel.setup(
+            sharedViewModel.conversionLiveData.value,
+            sharedViewModel.conversionLineLiveData.value
+        )
+
+        recyclerView.adapter = ConversionRecyclerViewAdapter(viewModel.itemLineList) { position ->
+            viewModel.setItemLineSelected(position)
         }
 
         stickyHeaderItemDecorator = StickyHeaderItemDecorator.build(recyclerView, stickyHeaderItemDecorator)
 
-        viewModel.itemLines?.observe(viewLifecycleOwner) { itemLines ->
+        viewModel.itemLineListLiveData?.observe(viewLifecycleOwner) { itemLines ->
             (recyclerView.adapter as ConversionRecyclerViewAdapter).update(itemLines)
+            sharedViewModel.update()
         }
     }
 

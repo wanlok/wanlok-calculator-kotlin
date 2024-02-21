@@ -1,6 +1,7 @@
 package com.wanlok.calculator.customView
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,8 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.wanlok.calculator.R
-import java.math.BigDecimal
 
-class BindableSpinnerAdapter(context: Context, textViewResourceId: Int, private val values: List<SpinnerItem>): ArrayAdapter<BindableSpinnerAdapter.SpinnerItem>(context, textViewResourceId, values) {
+class BindableSpinnerAdapter(context: Context, textViewResourceId: Int, private var values: List<SpinnerItem>): ArrayAdapter<BindableSpinnerAdapter.SpinnerItem>(context, textViewResourceId, values) {
 
     override fun getCount() = values.size
 
@@ -24,7 +24,7 @@ class BindableSpinnerAdapter(context: Context, textViewResourceId: Int, private 
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val label = super.getView(position, convertView, parent) as TextView
-        label.text = values[position].label
+        label.text = values[position].text
         return label
     }
 
@@ -34,11 +34,18 @@ class BindableSpinnerAdapter(context: Context, textViewResourceId: Int, private 
             view = LayoutInflater.from(context).inflate(R.layout.spinner_item, parent, false)
         }
         val textView: TextView = view!!.findViewById(R.id.textView)
-        textView.text = values[position].label
+        textView.text = values[position].text
         return view
     }
 
-    data class SpinnerItem(val label: String, val type: Int, val encode: (String) -> String, val decode: (String) -> String)
+    fun update(values: List<SpinnerItem>?) {
+        values?.let { values ->
+            this.values = values
+            notifyDataSetChanged()
+        }
+    }
+
+    data class SpinnerItem(val text: String, val data: Any)
 
     companion object {
         @BindingAdapter(value = ["spinnerItems", "selectedSpinnerItem", "selectedSpinnerItemAttrChanged"], requireAll = false)
@@ -76,7 +83,7 @@ class BindableSpinnerAdapter(context: Context, textViewResourceId: Int, private 
         private fun setCurrentSelection(spinner: Spinner, selectedItem: SpinnerItem?): Boolean {
             selectedItem?.let {
                 for (index in 0 until spinner.adapter.count) {
-                    if (spinner.getItemAtPosition(index) == it.label) {
+                    if (spinner.getItemAtPosition(index) == it.text) {
                         spinner.setSelection(index)
                         return true
                     }
