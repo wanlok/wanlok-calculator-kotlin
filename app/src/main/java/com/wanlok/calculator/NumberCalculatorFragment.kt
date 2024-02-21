@@ -234,7 +234,7 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.item_filter -> {
+            R.id.item_conversion -> {
                 open(ConversionFragment())
                 return true
             }
