@@ -9,4 +9,5 @@
     android:textSize="@dimen/calculator_text_size"
     android:textColor="@color/white"
     android:textAllCaps="false"
+    android:letterSpacing="0"
     app:cornerRadius="0dp" />

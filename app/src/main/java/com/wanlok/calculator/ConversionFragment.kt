@@ -32,6 +32,7 @@ class ConversionFragment : NavigationFragment() {
 //        binding.viewModel = viewModel
         binding.lifecycleOwner = this
         val view = binding.root
+        preventClickable(view, R.id.parentLayout)
         recyclerView = view.findViewById(R.id.recyclerView)
         return view
     }
