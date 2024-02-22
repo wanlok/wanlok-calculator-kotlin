@@ -3,33 +3,68 @@ package com.wanlok.calculator
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.wanlok.calculator.Utils.divide
-import com.wanlok.calculator.Utils.multiply
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import com.wanlok.calculator.model.Conversion
 import com.wanlok.calculator.model.ConversionLine
 
 class SharedViewModel : ViewModel() {
-    val leftFirstConversionLine = ConversionLine("Numbers", 0, { x: String -> x }, { x: String -> x }, true)
-    val rightFirstConversionLine = ConversionLine("Subtotal", 0, { x: String -> x }, { x: String -> x }, true)
+    val leftFirstConversionLine = ConversionLine("", "", "Numbers", "x", "x", true)
+    val rightFirstConversionLine = ConversionLine("", "", "Subtotal", "x", "x", true)
 
-    private val conversions = listOf(
-        Conversion(1, "Length"),
-        Conversion(2, "Area"),
-        Conversion(3, "Currency")
-    )
-
-    private val conversionLines = listOf(
-        ConversionLine("cm", 1, { x: String -> x }, { x: String -> x }, true),
-        ConversionLine("m", 1, { x: String -> multiply(x, "100") }, { x: String -> divide(x, "100") }, true),
-        ConversionLine("ft", 1, { x: String -> multiply(x, "30.48") }, { x: String -> divide(x, "30.48") }, true),
-        ConversionLine("m²", 2, { x: String -> x }, { x: String -> x }, true),
-        ConversionLine("ft²", 2, { x: String -> multiply(x, "0.09290304") }, { x: String -> divide(x, "0.09290304") }, true),
-    )
+    private var conversions: ArrayList<Conversion> = ArrayList()
+    private var conversionLines: ArrayList<ConversionLine> = ArrayList()
 
     val conversionLiveData = MutableLiveData(conversions)
     val conversionLineLiveData = MutableLiveData(conversionLines)
 
+    private val db: FirebaseFirestore = Firebase.firestore
+
     fun update() {
         conversionLineLiveData.postValue(conversionLines)
+    }
+
+    fun downloadConversion() {
+        val conversionList = ArrayList<Conversion>()
+        val conversionLines = ArrayList<ConversionLine>()
+        db.collection("conversion").get()
+            .addOnSuccessListener { result ->
+                var sum: Long = 0
+                for (document in result) {
+                    val id = document.id
+                    val text = document.data["text"] as String
+                    val order = document.data["order"] as Long
+                    val count = document.data["count"] as Long
+                    conversionList.add(Conversion(id, text, order, count))
+                    sum += count
+                }
+                for (conversion in conversionList) {
+                    db.collection("conversion").document(conversion.id).collection("line").get()
+                        .addOnSuccessListener { result ->
+                            for (document in result) {
+                                val id = document.id
+                                val conversionId = conversion.id
+                                val text = document.data["text"] as String
+                                val encode = document.data["encode"] as String
+                                val decode = document.data["decode"] as String
+                                val selected = document.data["selected"] as Boolean
+                                conversionLines.add(ConversionLine(id, conversionId, text, encode, decode, selected))
+                            }
+                            if (conversionLines.size.toLong() == sum) {
+                                this.conversions = conversionList
+                                this.conversionLines = conversionLines
+                                conversionLiveData.postValue(conversionList)
+                                conversionLineLiveData.postValue(conversionLines)
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.w("ROBERT", "Error getting documents.", exception)
+                        }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("ROBERT", "Error getting documents.", exception)
+            }
     }
 }

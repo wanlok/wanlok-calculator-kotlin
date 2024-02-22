@@ -17,10 +17,10 @@ class ConversionViewModel: ViewModel() {
         conversions?.let { conversions ->
             conversionLines?.let { conversionLines ->
                 val itemLineList = ArrayList<ItemLine>()
-                for (conversion in conversions) {
+                for (conversion in conversions.sortedBy { it.order }) {
                     itemLineList.add(ItemHeader(conversion.text))
                     for (conversionLine in conversionLines) {
-                        if (conversion.type == conversionLine.type) {
+                        if (conversion.id == conversionLine.conversionId) {
                             itemLineList.add(ItemLine(conversionLine.text, conversionLine.selected, conversionLine))
                         }
                     }

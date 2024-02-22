@@ -2,10 +2,10 @@ package com.wanlok.calculator
 
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.wanlok.calculator.Utils.divide
+import com.wanlok.calculator.Utils.eval
 import com.wanlok.calculator.Utils.isZero
 import com.wanlok.calculator.Utils.minus
 import com.wanlok.calculator.Utils.multiply
@@ -64,14 +64,18 @@ class NumberCalculatorViewModel: ViewModel() {
         return rightSpinnerSelectedItemLiveData.value == rightSpinnerItemListLiveData.value?.first()
     }
 
+    val PLACEHOLDER = "x"
+
     private fun convert(calculationLine: CalculationLine?) {
         calculationLine?.let { calculationLine ->
             if (calculationLine.operand.isNotEmpty()) {
                 getSpinnerSelectedItems { leftSpinnerSelectedItem, rightSpinnerSelectedItem ->
                     val leftConversionLine = leftSpinnerSelectedItem.data as ConversionLine
                     val rightConversionLine = rightSpinnerSelectedItem.data as ConversionLine
-                    if (leftConversionLine.type == rightConversionLine.type && !isRightSpinnerFirstItemSelected()) {
-                        calculationLine.convertedValue = rightConversionLine.decode(leftConversionLine.encode(calculationLine.operand))
+                    if (leftConversionLine.conversionId == rightConversionLine.conversionId && !isRightSpinnerFirstItemSelected()) {
+                        var convertedValue = eval(leftConversionLine.encode.replace(PLACEHOLDER, calculationLine.operand)).toString()
+                        convertedValue = eval(rightConversionLine.decode.replace(PLACEHOLDER, convertedValue)).toString()
+                        calculationLine.convertedValue = stripTrailingZeros(convertedValue)
                     } else {
                         calculationLine.convertedValue = null
                     }
@@ -84,7 +88,7 @@ class NumberCalculatorViewModel: ViewModel() {
         getSpinnerSelectedItems { leftSpinnerSelectedItem, rightSpinnerSelectedItem ->
             val from = leftSpinnerSelectedItem.data as ConversionLine
             val to = rightSpinnerSelectedItem.data as ConversionLine
-            if (from.type != to.type) {
+            if (from.conversionId != to.conversionId) {
                 rightSpinnerSkippedLiveData.postValue(true)
                 rightSpinnerSelectedItemLiveData.postValue(rightSpinnerItemListLiveData.value?.first())
                 Handler(Looper.getMainLooper()).postDelayed({

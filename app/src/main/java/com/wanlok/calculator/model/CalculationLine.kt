@@ -1,8 +1,8 @@
 package com.wanlok.calculator.model
 
 data class CalculationLine(
-    var calculationId: Int,
-    var calculationLineId: Int,
+    var calculationId: Long,
+    var calculationLineId: Long,
     var operator: String?,
     var operand: String,
     var subtotal: String,

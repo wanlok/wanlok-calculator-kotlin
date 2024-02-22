@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.wanlok.calculator.customView.CalculatorButton
 import com.wanlok.calculator.customView.SeparatorItemDecoration
 import com.wanlok.calculator.customView.StickyHeaderItemDecorator
 import com.wanlok.calculator.customView.StickyHeaderRecyclerViewAdapter
@@ -29,6 +30,7 @@ class ConversionFragment : NavigationFragment() {
 
     private lateinit var titleCheckBox: CheckBox
     private lateinit var titleTextView: TextView
+    private lateinit var updateButton: CalculatorButton
     private lateinit var recyclerView: RecyclerView
 
     private var stickyHeaderItemDecorator: StickyHeaderItemDecorator? = null
@@ -47,6 +49,7 @@ class ConversionFragment : NavigationFragment() {
         parentView = view.findViewById(R.id.parentView)
         titleCheckBox = view.findViewById(R.id.titleCheckBox)
         titleTextView = view.findViewById(R.id.titleTextView)
+        updateButton = view.findViewById(R.id.updateButton)
         recyclerView = view.findViewById(R.id.recyclerView)
 
         return view
@@ -64,6 +67,10 @@ class ConversionFragment : NavigationFragment() {
 
         titleTextView.setOnClickListener {
             titleCheckBox.performClick()
+        }
+
+        updateButton.setOnClickListener {
+            sharedViewModel.downloadConversion()
         }
 
         recyclerView.layoutManager = LinearLayoutManager(activity)
@@ -89,12 +96,30 @@ class ConversionFragment : NavigationFragment() {
 
         viewModel.itemLineListLiveData.observe(viewLifecycleOwner) { itemLines ->
             (recyclerView.adapter as ConversionRecyclerViewAdapter).update(itemLines)
-            sharedViewModel.update()
             viewModel.manuallyCheckedLiveData.value = false
+            sharedViewModel.update()
             titleCheckBox.isChecked = viewModel.isAllChecked()
             Handler(Looper.getMainLooper()).postDelayed({
                 viewModel.manuallyCheckedLiveData.value = true
             }, 100)
+        }
+
+        sharedViewModel.conversionLiveData.observe(viewLifecycleOwner) { conversionList ->
+            if (viewModel.manuallyCheckedLiveData.value == true) {
+                viewModel.setup(
+                    conversionList,
+                    sharedViewModel.conversionLineLiveData.value
+                )
+            }
+        }
+
+        sharedViewModel.conversionLineLiveData.observe(viewLifecycleOwner) { conversionLineList ->
+            if (viewModel.manuallyCheckedLiveData.value == true) {
+                viewModel.setup(
+                    sharedViewModel.conversionLiveData.value,
+                    conversionLineList
+                )
+            }
         }
     }
 
