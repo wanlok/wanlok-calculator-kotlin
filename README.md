@@ -14,6 +14,8 @@ https://drive.google.com/file/d/1GmGS60SCfCAcpNZRhfePR5V6GegH2065/view?usp=shari
 
 ![2](https://github.com/wanlok/wanlok-calculator-kotlin/assets/48524179/a0ecd1ec-2878-413c-9cd2-b61b9d5fd92c)
 
+3. Formulas for conversion are stored in Firestore. This allow new conversion to be added dynamically to the app in the future. A parser to parse string into math equations and calculate their answer is implemented.
+
 ![Firestore](https://github.com/wanlok/wanlok-calculator-kotlin/assets/48524179/40ff23fb-42b6-4f71-a93f-68886643432a)
 
 Credits:
