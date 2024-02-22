@@ -10,8 +10,8 @@ import com.wanlok.calculator.model.Conversion
 import com.wanlok.calculator.model.ConversionLine
 
 class SharedViewModel : ViewModel() {
-    val leftFirstConversionLine = ConversionLine("", "", "Numbers", "x", "x", true)
-    val rightFirstConversionLine = ConversionLine("", "", "Subtotal", "x", "x", true)
+    val leftFirstConversionLine = ConversionLine("", "", 0, "Numbers", "x", "x", true)
+    val rightFirstConversionLine = ConversionLine("", "", 0, "Subtotal", "x", "x", true)
 
     private var conversions: ArrayList<Conversion> = ArrayList()
     private var conversionLines: ArrayList<ConversionLine> = ArrayList()
@@ -44,12 +44,11 @@ class SharedViewModel : ViewModel() {
                         .addOnSuccessListener { result ->
                             for (document in result) {
                                 val id = document.id
-                                val conversionId = conversion.id
                                 val text = document.data["text"] as String
                                 val encode = document.data["encode"] as String
                                 val decode = document.data["decode"] as String
                                 val selected = document.data["selected"] as Boolean
-                                conversionLines.add(ConversionLine(id, conversionId, text, encode, decode, selected))
+                                conversionLines.add(ConversionLine(id, conversion.id, conversion.order, text, encode, decode, selected))
                             }
                             if (conversionLines.size.toLong() == sum) {
                                 this.conversions = conversionList

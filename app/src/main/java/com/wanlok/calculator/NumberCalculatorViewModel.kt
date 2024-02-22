@@ -38,7 +38,7 @@ class NumberCalculatorViewModel: ViewModel() {
     private fun combine(firstConversionLine: ConversionLine, conversionLines: List<ConversionLine>?): List<BindableSpinnerAdapter.SpinnerItem> {
         val list = ArrayList<BindableSpinnerAdapter.SpinnerItem>()
         conversionLines?.let { conversionLines ->
-            for (conversationLine in listOf(firstConversionLine) + conversionLines.filter { it.selected }) {
+            for (conversationLine in listOf(firstConversionLine) + conversionLines.filter { it.selected }.sortedBy { it.conversionOrder }) {
                 list.add(BindableSpinnerAdapter.SpinnerItem(conversationLine.text, conversationLine))
             }
         }
