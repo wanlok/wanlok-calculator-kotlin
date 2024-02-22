@@ -11,7 +11,11 @@ I also notice a few pain points in calculator apps available in Google Play and 
 ![2](https://github.com/wanlok/wanlok-calculator-kotlin/assets/48524179/a0ecd1ec-2878-413c-9cd2-b61b9d5fd92c)
 
 Credits to icon developers:
+
 <a href="https://www.flaticon.com/free-icons/calculator" title="calculator icons">Calculator icons created by Hilmy Abiyyu A. - Flaticon</a>
+
 <a href="https://www.flaticon.com/free-icons/convert" title="convert icons">Convert icons created by sonnycandra - Flaticon</a>
+
 <a href="https://www.flaticon.com/free-icons/save" title="save icons">Save icons created by Mihimihi - Flaticon</a>
+
 <a href="https://www.flaticon.com/free-icons/open-folder" title="open-folder icons">Open-folder icons created by kmg design - Flaticon</a>
