@@ -2,6 +2,10 @@ This is an app I developed to practise Android MVVM with data binding and Google
 
 I also notice a few pain points in calculator apps available in Google Play and App Store. Therefore, I decided to write my calculator app and make it open-source.
 
+APK Download:
+
+https://drive.google.com/file/d/1GmGS60SCfCAcpNZRhfePR5V6GegH2065/view?usp=sharing
+
 1. The main user interface display operands vertically, user can remove any lines by swiping them to the right
 
 ![1](https://github.com/wanlok/wanlok-calculator-kotlin/assets/48524179/6681f75e-1bf3-4004-98c1-aa23ca264575)
