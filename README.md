@@ -12,7 +12,9 @@ I also notice a few pain points in calculator apps available in Google Play and 
 
 ![Firestore](https://github.com/wanlok/wanlok-calculator-kotlin/assets/48524179/40ff23fb-42b6-4f71-a93f-68886643432a)
 
-Credits to icon developers:
+Credits:
+
+<a href="https://stackoverflow.com/questions/3422673/how-to-evaluate-a-math-expression-given-in-string-form">How to evaluate a math expression given in string form?</a>
 
 <a href="https://www.flaticon.com/free-icons/calculator" title="calculator icons">Calculator icons created by Hilmy Abiyyu A. - Flaticon</a>
 
