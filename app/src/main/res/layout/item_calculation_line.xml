@@ -23,6 +23,7 @@
             android:background="@color/white" />
 
         <HorizontalScrollView
+            android:id="@+id/leftHorizontalScrollView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"
@@ -44,6 +45,7 @@
         </HorizontalScrollView>
 
         <HorizontalScrollView
+            android:id="@+id/rightHorizontalScrollView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.5"

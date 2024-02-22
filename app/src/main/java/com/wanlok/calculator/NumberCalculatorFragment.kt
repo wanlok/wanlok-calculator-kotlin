@@ -1,5 +1,6 @@
 package com.wanlok.calculator
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -17,10 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.wanlok.calculator.customView.BindableSpinnerAdapter
 import com.wanlok.calculator.customView.CalculatorButton
-import com.wanlok.calculator.customView.ExampleAdapter
 import com.wanlok.calculator.customView.SwipeListener
 import com.wanlok.calculator.customView.SwipeSimpleCallback
 import com.wanlok.calculator.databinding.FragmentCalculatorBinding
+import com.wanlok.calculator.databinding.ItemCalculationLineBinding
+import com.wanlok.calculator.model.CalculationLine
 
 class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
     private val viewModel: NumberCalculatorViewModel by viewModels()
@@ -120,7 +122,7 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         calculationRecyclerView.layoutManager = LinearLayoutManager(activity)
         calculationRecyclerView.setPadding(0, Utils.dp(8, context), 0, Utils.dp(8, context))
         calculationRecyclerView.clipToPadding = false
-        calculationRecyclerView.adapter = ExampleAdapter(emptyList())
+        calculationRecyclerView.adapter = Adapter(emptyList())
 
         context?.let { context ->
             itemTouchHelper = ItemTouchHelper(SwipeSimpleCallback(context, this))
@@ -189,7 +191,7 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         }
 
         viewModel.calculationLineListLiveData.observe(viewLifecycleOwner) { lines ->
-            val adapter = calculationRecyclerView.adapter as ExampleAdapter
+            val adapter = calculationRecyclerView.adapter as Adapter
             adapter.update(lines)
             if (viewModel.shouldScrollToBottom()) {
                 calculationRecyclerView.scrollToPosition(adapter.itemCount - 1)
@@ -240,6 +242,43 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
             }
         }
         return false
+    }
+
+    class Adapter(private var calculationLines: List<CalculationLine>): RecyclerView.Adapter<Adapter.ViewHolder>() {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
+            val binding: ItemCalculationLineBinding = DataBindingUtil.inflate(inflater, R.layout.item_calculation_line, parent, false)
+            return ViewHolder(binding)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.bind(calculationLines[position])
+        }
+
+        override fun getItemCount(): Int {
+            return calculationLines.size
+        }
+
+        fun update(calculationLines: List<CalculationLine>) {
+            this.calculationLines = calculationLines
+            notifyDataSetChanged()
+        }
+
+        class ViewHolder(private val binding: ItemCalculationLineBinding): RecyclerView.ViewHolder(binding.root) {
+            @SuppressLint("ClickableViewAccessibility")
+            fun bind(calculationLine: CalculationLine) {
+                binding.leftHorizontalScrollView.setOnTouchListener { _, _ ->
+                    binding.rightHorizontalScrollView.scrollTo(0, 0)
+                    false
+                }
+                binding.rightHorizontalScrollView.setOnTouchListener { _, _ ->
+                    binding.leftHorizontalScrollView.scrollTo(0, 0)
+                    false
+                }
+                binding.calculationLine = calculationLine
+                binding.executePendingBindings()
+            }
+        }
     }
 }
 

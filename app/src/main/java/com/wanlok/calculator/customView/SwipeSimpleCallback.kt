@@ -1,17 +1,17 @@
 package com.wanlok.calculator.customView
 
-import android.R
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.widget.HorizontalScrollView
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.wanlok.calculator.customView.SwipeListener
-
+import com.wanlok.calculator.NumberCalculatorFragment
+import com.wanlok.calculator.R
 
 class SwipeSimpleCallback(private var context: Context, var swipeListener: SwipeListener): ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         return false
     }
@@ -51,5 +51,15 @@ class SwipeSimpleCallback(private var context: Context, var swipeListener: Swipe
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         swipeListener.onSwipe(direction, viewHolder.adapterPosition)
+    }
+
+    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+        val view = recyclerView[(viewHolder as NumberCalculatorFragment.Adapter.ViewHolder).adapterPosition]
+        val leftHorizontalScrollView: HorizontalScrollView = view.findViewById(R.id.leftHorizontalScrollView)
+        val leftCanScrollHorizontally = leftHorizontalScrollView.canScrollHorizontally(-1)
+        val rightHorizontalScrollView: HorizontalScrollView = view.findViewById(R.id.rightHorizontalScrollView)
+        val rightCanScrollHorizontally = rightHorizontalScrollView.canScrollHorizontally(-1)
+        val canScrollHorizontally = leftCanScrollHorizontally || rightCanScrollHorizontally
+        return if (canScrollHorizontally) 0 else super.getMovementFlags(recyclerView, viewHolder)
     }
 }
