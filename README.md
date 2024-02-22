@@ -1,6 +1,6 @@
 This is an app I developed to practise Android MVVM with data binding and Google Firestore.
 
-I notice a few pain points in calculator apps available in Google Play and App Store. Therefore, I decided to write my calculator app and make it open-source.
+I notice a few pain points in calculator apps available in Google Play and App Store. Therefore, I decided to write my calculator app to solve those issues and make it open-source.
 
 APK Download:
 
