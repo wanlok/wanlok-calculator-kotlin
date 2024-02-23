@@ -2,6 +2,7 @@ package com.wanlok.calculator
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -110,14 +111,13 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
         if (viewModel.calculationLineList.size <= 1) {
             swipeAllowed = false
         } else {
-            val index = (viewHolder as Adapter.ViewHolder).adapterPosition
+            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+            val index = viewHolder.adapterPosition - layoutManager.findFirstVisibleItemPosition()
             if (index < recyclerView.size) {
                 val view = recyclerView[index]
-                val leftHorizontalScrollView: HorizontalScrollView = view.findViewById(R.id.leftHorizontalScrollView)
-                val rightHorizontalScrollView: HorizontalScrollView = view.findViewById(R.id.rightHorizontalScrollView)
-                val canLeftHorizontalScrollViewScrollHorizontally = leftHorizontalScrollView.canScrollHorizontally(-1)
-                val canRightHorizontalScrollViewScrollHorizontally = rightHorizontalScrollView.canScrollHorizontally(-1)
-                swipeAllowed = !(canLeftHorizontalScrollViewScrollHorizontally || canRightHorizontalScrollViewScrollHorizontally)
+                val left: HorizontalScrollView = view.findViewById(R.id.leftHorizontalScrollView)
+                val right: HorizontalScrollView = view.findViewById(R.id.rightHorizontalScrollView)
+                swipeAllowed = !(left.canScrollHorizontally(-1) || right.canScrollHorizontally(-1))
             }
         }
         return swipeAllowed
