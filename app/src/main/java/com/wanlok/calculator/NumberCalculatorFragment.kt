@@ -8,8 +8,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -100,6 +103,24 @@ class NumberCalculatorFragment : NavigationFragment(), SwipeListener {
 
     private fun onClearButtonClick() {
         viewModel.clear()
+    }
+
+    override fun isSwipeAllowed(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Boolean {
+        var swipeAllowed = true
+        if (viewModel.calculationLineList.size <= 1) {
+            swipeAllowed = false
+        } else {
+            val index = (viewHolder as Adapter.ViewHolder).adapterPosition
+            if (index < recyclerView.size) {
+                val view = recyclerView[index]
+                val leftHorizontalScrollView: HorizontalScrollView = view.findViewById(R.id.leftHorizontalScrollView)
+                val rightHorizontalScrollView: HorizontalScrollView = view.findViewById(R.id.rightHorizontalScrollView)
+                val canLeftHorizontalScrollViewScrollHorizontally = leftHorizontalScrollView.canScrollHorizontally(-1)
+                val canRightHorizontalScrollViewScrollHorizontally = rightHorizontalScrollView.canScrollHorizontally(-1)
+                swipeAllowed = !(canLeftHorizontalScrollViewScrollHorizontally || canRightHorizontalScrollViewScrollHorizontally)
+            }
+        }
+        return swipeAllowed
     }
 
     override fun onSwipe(direction: Int, position: Int) {
