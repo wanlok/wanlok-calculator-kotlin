@@ -1,7 +1,6 @@
 package com.wanlok.calculator
 
 import android.content.Context
-import android.util.Log
 import android.util.TypedValue
 import android.util.TypedValue.COMPLEX_UNIT_DIP
 import java.math.BigDecimal
@@ -46,7 +45,11 @@ object Utils {
     }
 
     fun divide(x: BigDecimal, y: BigDecimal): BigDecimal {
-        return x.divide(y, 2, RoundingMode.HALF_UP)
+        return try {
+            x.divide(y)
+        } catch (e: ArithmeticException) {
+            x.divide(y, 32, RoundingMode.HALF_UP)
+        }
     }
 
     fun divide(x: String, y: String): String {
@@ -74,8 +77,6 @@ object Utils {
     }
 
     fun eval(str: String): BigDecimal {
-        Log.d("ROBERT", "INPUT FORMULA: " + str)
-
         return object : Any() {
             var pos = -1
             var ch = 0

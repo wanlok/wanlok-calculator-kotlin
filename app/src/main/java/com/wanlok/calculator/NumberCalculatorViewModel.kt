@@ -73,8 +73,8 @@ class NumberCalculatorViewModel: ViewModel() {
                     val leftConversionLine = leftSpinnerSelectedItem.data as ConversionLine
                     val rightConversionLine = rightSpinnerSelectedItem.data as ConversionLine
                     if (leftConversionLine.conversionId == rightConversionLine.conversionId && !isRightSpinnerFirstItemSelected()) {
-                        var convertedValue = eval(leftConversionLine.encode.replace(PLACEHOLDER, calculationLine.operand)).toString()
-                        convertedValue = eval(rightConversionLine.decode.replace(PLACEHOLDER, convertedValue)).toString()
+                        var convertedValue = eval(leftConversionLine.encode.replace(PLACEHOLDER, calculationLine.operand)).toPlainString()
+                        convertedValue = eval(rightConversionLine.decode.replace(PLACEHOLDER, convertedValue)).toPlainString()
                         calculationLine.convertedValue = stripTrailingZeros(convertedValue)
                     } else {
                         calculationLine.convertedValue = null
